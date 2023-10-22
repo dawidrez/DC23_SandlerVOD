@@ -12,6 +12,7 @@ Enable venv
     Set-ExecutionPolicy Unrestricted -Scope Process
     .\venv\Scripts\activate
 ```
+Create .env file in root directory and copy envs from .env.example
 
 Install requirements
 ```
