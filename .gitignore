@@ -9,3 +9,5 @@ __pycache__
 
 #pycharm
 .idea/
+
+app/utils/google/service_account.json
