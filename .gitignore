@@ -3,3 +3,9 @@ db.sqlite3
 venv
 
 __pycache__
+
+#enviroments
+.env
+
+#pycharm
+.idea/
