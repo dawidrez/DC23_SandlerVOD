@@ -117,9 +117,9 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #email settings
-EMAIL_BACKEND = ('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST = env('EMAIL_HOST', '')
-EMAIL_HOST_USER = env('EMAIL_HOST_USER','user@gmail.com')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD','yourpassword')
+EMAIL_HOST = env('EMAIL_HOST', default='email_host')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER',default='user@gmail.com')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD',default='yourpassword')
