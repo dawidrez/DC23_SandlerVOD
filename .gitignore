@@ -6,3 +6,6 @@ __pycache__
 
 #enviroments
 .env
+
+#pycharm
+.idea/
