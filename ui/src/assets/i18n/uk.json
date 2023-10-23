@@ -1,0 +1,47 @@
+{
+  "commons": {
+    "login": "Zaloguj się",
+    "email": "Email",
+    "password": "Hasło",
+    "firstName": "Imię",
+    "lastName": "Nazwisko",
+    "auction": "Aukcja",
+    "archive": "Archiwum",
+    "in-stock": "W magazynie",
+    "home-subtitle": "Maksymalizuj wartość, minimalizuj koszty",
+    "description": "Opis",
+    "save": "Zapisz",
+    "pull-cars": "Aktualizuj wszystkie samochody",
+    "logout": "Wyloguj się",
+    "delete": "Usuń",
+    "copy-link": "Kopiuj link",
+    "days": "Dni",
+    "day": "Dzień",
+    "header-search-phrase-filter": "Nazwa samochodu, skrzynia biegów lub paliwo",
+    "header-mileage-filter": "Maksymalny przebieg",
+    "header-year-filter": "Minimalny rok produkcji",
+    "search": "Szukaj",
+    "km-short": "km",
+    "cubic-centimetres": "cm³",
+    "hours": "Godziny",
+    "hour": "Godzina",
+    "open-original-url": "Otwórz URL",
+    "cancel": "Anuluj",
+    "create": "Utwórz",
+    "close": "Zamknij",
+    "youtube-url": "URL YouTube",
+    "EXPIRED": "WYGAŚNIĘTY",
+    "cars-line": "Linia samochodów",
+    "to-register": "Do rejestracji",
+    "to-login": "Do Logowania"
+  },
+
+  "car": {
+    "auction-end-date": "Data zakończenia aukcji",
+    "registration-year": "Rok rejestracji",
+    "mileage": "Przebieg",
+    "engine-displacement": "Pojemność silnika",
+    "fuel-type": "Rodzaj paliwa",
+    "original-url": "Oryginalny URL"
+  }
+}

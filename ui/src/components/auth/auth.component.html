@@ -1,0 +1,65 @@
+<div class="login-dark h-screen w-screen">
+  <form [formGroup]="editForm" class="row">
+    <div class="col-12 flex justify-content-center align-items-center flex-column gap-3">
+      <div class="illustration"><i class="bi bi-person-lock"></i></div>
+      <div class="row w-full" *ngIf="mode==='register'">
+        <div class="p-input-filled">
+          <input pInputText formControlName="firstname" class="w-full"
+            placeholder="{{ ('commons.firstName' | translate) + ' *'}}" />
+        </div>
+      </div>
+      <div class="row w-full" *ngIf="mode==='register'">
+        <div class="p-input-filled">
+          <input pInputText formControlName="lastname" class="w-full"
+            placeholder="{{ ('commons.lastName' | translate) + ' *'}}" />
+        </div>
+      </div>
+      <div class="row w-full">
+        <div class="p-input-filled">
+          <input pInputText formControlName="email" class="w-full"
+            placeholder="{{ ('commons.email' | translate) + ' *'}}" />
+        </div>
+      </div>
+      <div class="row w-full" *ngIf="mode==='register'">
+        <div class="p-input-filled">
+          <input pInputText formControlName="address" class="w-full"
+            placeholder="{{ ('commons.address' | translate) + ' *'}}" />
+        </div>
+      </div>
+      <div class="row w-full" *ngIf="mode==='register'">
+        <div class="p-input-filled">
+          <input pInputText formControlName="gender" class="w-full"
+            placeholder="{{ ('commons.gender' | translate) + ' *'}}" />
+        </div>
+      </div>
+      <!-- <div class="row w-full">
+        <div class="p-input-filled">
+          <input pInputText formControlName="role" class="w-full"
+            placeholder="{{ ('commons.role' | translate) + ' *'}}" />
+        </div>
+      </div> -->
+      <!-- <div class="row w-full">
+        <div class="p-input-filled">
+          <p-password [placeholder]="('commons.password' | translate) + ' *'" formControlName="password"
+            styleClass="w-full input-full-width" [toggleMask]="true" [feedback]="false"></p-password>
+        </div>
+      </div> -->
+      <div class="row w-full">
+        <p-button [label]="mode === 'login' ? ('commons.login' | translate) : ('commons.register' | translate)"
+          [loading]="loading" (onClick)="mode === 'login' ? login() : register()" styleClass="w-full">
+        </p-button>
+      </div>
+      <div class="row w-full">
+        <p-button [label]="mode === 'login' ? ('commons.to-register' | translate) : ('commons.to-login' | translate)"
+          [loading]="loading" (onClick)="mode = mode === 'login' ? 'register' : 'login'; updateModeHelper()" styleClass="w-full
+          p-button-success">
+        </p-button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="imageVisible" class="full-screen-image" [@fadeInOut]="fadeInOutState"
+  (@fadeInOut.done)="onAnimationDone($event)">
+  <img [src]="imageSrc">
+</div>

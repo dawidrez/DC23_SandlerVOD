@@ -1,0 +1,311 @@
+@import url('https://fonts.googleapis.com/css2?family=Days+One&display=swap');
+
+:root {
+  --pastel-red: #ff6961;
+  --pastel-green: #507a3f;
+  --pastel-yellow: #fbba18;
+  --pastel-blue: #3842a3;
+  --pastel-purple: #a1469e;
+  --pastel-grey: #a19f95;
+  --pastel-darker-blue: #375369;
+  --pastel-orange: #f89f41;
+  --app-bg-color: #202021;
+  --card-color: #29292B;
+  --text-color: #FFFFFF;
+  --money-green: #4fbf67;
+
+
+
+
+  --pale-purple-pantone: hsl(262, 63%, 92%);
+  --medium-sea-green: hsl(152, 63%, 43%);
+  --lavender-blush: hsl(336, 35%, 92%);
+  --carolina-blue: hsl(204, 91%, 53%);
+  --columbia-blue: hsl(204, 92%, 90%);
+  --independence: hsl(219, 21%, 39%);
+  --deep-cerise: hsl(329, 63%, 52%);
+  --eerie-black: hsl(210, 11%, 15%);
+  --space-cadet: hsl(240, 22%, 25%);
+  --blue-jeans: hsl(204, 80%, 63%);
+  --slate-blue: hsl(262, 60%, 57%);
+  --beau-blue: hsl(208, 86%, 92%);
+  --honey-dew: hsl(152, 48%, 89%);
+  --mimi-pink: hsl(329, 63%, 90%);
+  --red-salsa: hsl(0, 79%, 63%);
+  --sapphire: hsl(211, 100%, 35%);
+  --manatee: hsl(219, 14%, 60%);
+  --white: hsl(0, 0%, 100%);
+
+  --gradient: var(--card-color);
+
+  /**
+   * typography
+   */
+
+  --ff-nunito: 'Nunito',
+    sans-serif;
+  --ff-open-sans: 'Open Sans',
+    sans-serif;
+
+  --fs-1: 2.125rem;
+  --fs-2: 1.875rem;
+  --fs-3: 1.5rem;
+  --fs-4: 1.375rem;
+  --fs-5: 1.125rem;
+  --fs-6: 0.875rem;
+  --fs-7: 0.625rem;
+
+  --fw-400: 400;
+  --fw-600: 600;
+
+  /**
+   * transition
+   */
+
+  --transition: 0.5s ease;
+
+  /**
+   * spacing
+   */
+
+  --section-padding: 50px;
+
+  /**
+   * radius
+   */
+
+  --radius-10: 10px;
+  --radius-14: 14px;
+  --radius-18: 18px;
+
+  /**
+   * shadow
+   */
+
+  --shadow-1: 3px 3px 9px var(--surface-card);
+  --shadow-2: 3px 3px 9px var(--surface-overlay);
+}
+
+.row {
+  margin: 0;
+
+  &>* {
+    padding: 0;
+  }
+}
+
+html {
+  background-color: var(--app-bg-color);
+}
+
+body {
+  font-family: var(--font-family);
+  margin: 0;
+}
+
+.p-required {
+  label:after {
+    content: " *";
+    color: #f44435;
+  }
+}
+
+.cut-text-size {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+quill-editor {
+  width: 100%;
+}
+
+.ql-label {
+  margin: 0;
+  padding: 8px;
+  padding-left: 16px;
+  background: var(--surface-100);
+  display: block;
+  color: var(--text-color);
+}
+
+.ql-label-warning {
+  color: #f44336 !important;
+  padding: 0px;
+  padding-left: 16px;
+  padding-bottom: 5px;
+  font-size: 75%;
+}
+
+.ql-mention-list-container {
+  background: #313742;
+  padding: 0;
+  border: 2px solid rgba(154, 220, 250, .1);
+  border-radius: 3px;
+  color: var(--primary-color);
+  max-height: 150px;
+  min-width: 145px;
+  overflow-y: scroll;
+}
+
+.ql-mention-list-container ul {
+  padding: 5px 0;
+}
+
+.ql-mention-list-container ul li {
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.ql-mention-list-container ul li:hover {
+  background: var(--surface-50);
+}
+
+.ql-toolbar.ql-snow+.ql-container.ql-snow {
+  border: 2px solid var(--surface-100) !important;
+}
+
+.ql-editor .mention {
+  color: wheat;
+}
+
+.ql-mention-list-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ql-mention-list-container::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 20px;
+  border: 1px solid #313742;
+}
+
+.ql-mention-list-container::-webkit-scrollbar-track {
+  background: #313742;
+}
+
+.ql-editor.ql-blank::before {
+  color: var(--text-color-rgba-07) !important;
+  font-style: italic !important;
+}
+
+.ql-editor {
+  color: var(--text-color-secondary) !important;
+  padding: 16px !important;
+  min-height: 132px !important;
+}
+
+.ql-editor ol {
+  color: var(--text-color) !important;
+}
+
+.ql-editor ul {
+  color: var(--text-color) !important;
+}
+
+.ql-editor h1 {
+  color: var(--text-color) !important;
+}
+
+.ql-editor h2 {
+  color: var(--text-color) !important;
+}
+
+.ql-snow a {
+  color: wheat !important;
+}
+
+.ql-snow .ql-editor pre.ql-syntax {
+  color: var(--surface-50) !important;
+  background-color: wheat !important;
+}
+
+.ql-container.ql-snow {
+  border-top: 1px solid var(--primary-600) !important;
+  border-bottom: 1px solid var(--primary-600) !important;
+  border-left: none !important;
+  border-right: none !important;
+  background-color: var(--surface-50) !important;
+}
+
+.ql-snow .ql-stroke {
+  stroke: var(--primary-700) !important;
+}
+
+.ql-snow .ql-fill {
+  fill: var(--primary-700) !important;
+}
+
+.ql-snow.ql-toolbar {
+  border: 2px solid var(--surface-100) !important;
+  background: var(--surface-50);
+}
+
+.ql-snow.ql-toolbar button.add {
+  padding: .25rem .75rem !important;
+  background: #313742 !important;
+  border-radius: 5px !important;
+  width: 3.5rem !important;
+  height: 1.7rem !important;
+}
+
+.ql-snow.ql-toolbar button.add:hover {
+  border: 2px solid var(--surface-50) !important;
+  background: var(--surface-100) !important;
+  color: var(--primary-color) !important;
+}
+
+.ql-snow.ql-toolbar button {
+  border-radius: 3px !important;
+  padding: 2px 4px !important;
+  margin: 0 .1rem !important;
+  border: 2px solid var(--surface-50) !important;
+}
+
+.ql-snow.ql-toolbar button:focus {
+  outline: none !important;
+}
+
+.ql-snow.ql-toolbar button:hover {
+  border: 2px solid var(--primary-600) !important;
+}
+
+.ql-snow.ql-toolbar button.ql-active {
+  border: 2px solid var(--primary-600) !important;
+}
+
+.ql-snow.ql-toolbar button.ql-active .ql-stroke {
+  stroke: var(--primary-color) !important;
+}
+
+.ql-snow.ql-toolbar button.ql-active .ql-fill {
+  fill: var(--primary-color) !important;
+}
+
+.ql-snow.ql-toolbar button:hover .ql-stroke {
+  stroke: var(--primary-color) !important;
+}
+
+.ql-snow.ql-toolbar button:focus .ql-stroke {
+  stroke: var(--primary-color) !important;
+}
+
+.ql-snow.ql-toolbar button:hover .ql-fill {
+  fill: var(--primary-color) !important;
+}
+
+.ql-snow.ql-toolbar button:focus .ql-fill {
+  fill: var(--primary-color) !important;
+}
+
+
+@media (min-width: 768px) {
+  :root {
+    --fs-1: 2.625rem;
+  }
+}
+
+lightbox {
+  z-index: 10;
+}
