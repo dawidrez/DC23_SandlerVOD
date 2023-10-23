@@ -1,0 +1,46 @@
+.header {
+  background-color: #1d1e20;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-style: solid;
+  border-width: 0px 0px 1px 0px;
+  /* 25px top, 10px right, 4px bottom and 35px left */
+  border-color: rgb(217, 217, 217);
+}
+
+.logo-text {
+  font-size: 18px;
+  margin: 10px;
+  font-family: 'Days One',
+    sans-serif;
+  color: rgb(217, 217, 217);
+}
+
+::ng-deep .user-custom-overlay {
+  .p-overlaypanel-content {
+    padding: 0;
+  }
+}
+
+::ng-deep .small-font-size {
+  button {
+    font-size: 13px;
+    padding: 0rem;
+  }
+}
+
+::ng-deep .custom-language-buttons {
+  .p-button {
+    min-width: auto !important;
+
+    &.p-highlight {
+      background: var(--primary-900);
+    }
+  }
+}

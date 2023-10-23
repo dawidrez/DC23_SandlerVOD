@@ -1,0 +1,47 @@
+.login-dark {
+  background: #475d62 url(../../assets/img/auth_background.jpg);
+  background-size: cover;
+  position: relative;
+}
+
+.login-dark form {
+  max-width: 320px;
+  width: 90%;
+  background-color: rgba(30, 40, 51, 0.9);
+  padding: 40px;
+  border-radius: 10px;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: #fff;
+  box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.2);
+}
+
+.login-dark .illustration {
+  text-align: center;
+  padding: 15px 0 20px;
+  font-size: 80px;
+  color: #9FA8DA;
+}
+
+::ng-deep .input-full-width {
+  input {
+    width: 100%;
+  }
+}
+
+.full-screen-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+}
+
+.full-screen-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

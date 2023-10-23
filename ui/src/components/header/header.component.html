@@ -1,0 +1,58 @@
+<header class="header" [style.z-index]="headerZIndex">
+  <div class="flex justify-content-between align-items-center w-full gap-1">
+    <div class="flex align-items-center justify-content-start gap-0"
+      [class.small-font-size]="screenDetectorObject.isMobile" [class.gap-1]="!screenDetectorObject.isMobile">
+      <div class="flex align-items-center justify-content-start">
+        <img class="logo_img" src="../../assets/img/lable.jpg" style="width: 40px"
+          *ngIf="!screenDetectorObject.isMobile">
+        <!-- SANDLER VOD -->
+        <span class="logo-text">SANDLER VOD</span>
+      </div>
+      <p-button (onClick)="openByView([views.PACKAGES])" [label]="'commons.packages' | translate"
+        styleClass="p-button-text">
+      </p-button>
+      <!-- <p-button *ngIf="isUserHasAdminRole()" (onClick)="openByView([views.ARCHIVE])"
+        [label]="'commons.archive' | translate" styleClass="p-button-text">
+      </p-button> -->
+      <!-- <p-button (onClick)="openByView([views.INSTOCK])" [label]="'commons.in-stock' | translate"
+        styleClass="p-button-text"></p-button> -->
+    </div>
+
+    <!-- <div class="flex gap-2 justify-content-end">
+      <div *ngIf="isUserHasAdminRole()"> -->
+    <!-- <p-avatar icon="pi pi-user" styleClass="mr-2" shape="circle" [style]="{cursor: 'pointer'}"
+        (click)="userOP.toggle($event)">
+      </p-avatar> -->
+    <!-- <div style="cursor: pointer">
+          <p-chip *ngIf="!screenDetectorObject.isMobile" [label]="getCurrentUserFullName()" icon="pi pi-user"
+            (click)="userOP.toggle($event)"></p-chip>
+          <p-avatar *ngIf="screenDetectorObject.isMobile" [label]="getCurrentUserInitials()" shape="circle"
+            (click)="userOP.toggle($event)"></p-avatar>
+        </div> -->
+    <!-- <p-overlayPanel #userOP [appendTo]="document.body" styleClass="user-custom-overlay">
+          <ng-template pTemplate="content">
+            <p-listbox [options]="userOptions" optionLabel="name" [listStyle]="{ 'max-height': '250px' }">
+              <ng-template let-option pTemplate="item">
+                <div class="flex align-items-center gap-2" (click)="userClickEvent(option)">
+                  <i class="{{option.loading ? 'pi pi-spin pi-spinner' : option.icon}}" style="width: 18px"></i>
+                  <div>{{ option.name | translate }}</div>
+                </div>
+              </ng-template>
+            </p-listbox>
+
+          </ng-template>
+        </p-overlayPanel>
+      </div>
+      <div class="flex justify-content-center" *ngIf="!screenDetectorObject.isMobile">
+        <p-selectButton [options]="languageOptions" [formControl]="languageControl" optionLabel="icon"
+          styleClass="custom-language-buttons" optionValue="value">
+          <ng-template let-item pTemplate>
+            <i [class]="item.icon"></i>
+          </ng-template>
+        </p-selectButton>
+      </div> -->
+    <!-- </div> -->
+
+  </div>
+</header>
+<div style="height: 64px"></div>

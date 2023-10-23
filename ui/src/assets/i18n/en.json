@@ -1,0 +1,47 @@
+{
+  "commons": {
+    "login": "Log in",
+    "email": "Email",
+    "password": "Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "auction": "Auction",
+    "archive": "Archive",
+    "in-stock": "In Stock",
+    "home-subtitle": "Maximize Value, Minimize Cost",
+    "description": "Description",
+    "save": "Save",
+    "pull-cars": "Update All Cars",
+    "logout": "Logout",
+    "delete": "Delete",
+    "copy-link": "Copy Link",
+    "days": "Days",
+    "day": "Day",
+    "header-search-phrase-filter": "Car name, transmission, or fuel",
+    "header-mileage-filter": "Max Mileage",
+    "header-year-filter": "Minimal Make Year",
+    "search": "Search",
+    "km-short": "km",
+    "cubic-centimetres": "cm³",
+    "hours": "Hours",
+    "hour": "Hour",
+    "open-original-url": "Open URL",
+    "cancel": "Cancel",
+    "create": "Create",
+    "close": "Close",
+    "youtube-url": "YouTube URL",
+    "EXPIRED": "EXPIRED",
+    "cars-line": "Cars Line",
+    "to-register": "To Register",
+    "to-login": "To Login"
+  },
+
+  "car": {
+    "auction-end-date": "Auction end date",
+    "registration-year": "Registration year",
+    "mileage": "Milage",
+    "engine-displacement": "Engine capasity",
+    "fuel-type": "Fuel type",
+    "original-url": "Original Url"
+  }
+}
