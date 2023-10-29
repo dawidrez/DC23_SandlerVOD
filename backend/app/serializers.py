@@ -7,11 +7,10 @@ class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
         fields = (
-            "id"
+            "id",
             "email",
             "first_name",
             "second_name",
-            "role",
             "gender",
             "street_address",
             "city",
