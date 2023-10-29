@@ -15,7 +15,7 @@ def send_custom_emails():
         package = subscription.package
         subject = 'Twoja subskrypcja wkrótce się kończy!'
         message = f'Cześć {client.first_name},\n\nZauważyliśmy, że Twoja subskrypcja na pakiet "{package.name}" kończy się {subscription.end_date}. Czy chciałbyś ją przedłużyć?\n\nPozdrawiamy,\nZespół SandlerVOD'
-        send_email(subject, message, client.email)
+        send_email(subject, message, (client.email, ))
 
     # 2. Wysyłanie rekomendacji filmów na podstawie ich ocen
     high_rated_movies = Movie.objects.filter(rating__gte=4.5)[:3]
@@ -25,7 +25,7 @@ def send_custom_emails():
         for client in Client.objects.all():
             subject = 'Polecamy filmy z wysokimi ocenami!'
             message = f'Cześć {client.first_name},\n\nOto kilka filmów z wysokimi ocenami, które mogą Cię zainteresować: {recommended_titles}.\n\nPozdrawiamy,\nZespół SandlerVOD'
-            send_email(subject, message, client.email)
+            send_email(subject, message, (client.email, ))
 
     # 3. Wysyłanie promocji dla stałych klientów
     for client in Client.objects.all():
@@ -34,7 +34,7 @@ def send_custom_emails():
         if client_subscriptions_count > 5:
             subject = 'Specjalna oferta dla Ciebie!'
             message = f'Cześć {client.first_name},\n\nJesteś dla nas ważnym klientem! Dlatego przygotowaliśmy dla Ciebie specjalną ofertę zniżkową na kolejne pakiety. Skontaktuj się z nami, aby dowiedzieć się więcej!\n\nPozdrawiamy,\nZespół SandlerVOD'
-            send_email(subject, message, client.email)
+            send_email(subject, message, (client.email, ))
 
     # 4. Sugestia nowego pakietu dla klienta
     for client in Client.objects.all():
@@ -43,7 +43,7 @@ def send_custom_emails():
         if new_package:
             subject = 'Odkryj nasz nowy pakiet!'
             message = f'Cześć {client.first_name},\n\nZastanawiałeś się nad wypróbowaniem naszego pakietu "{new_package.name}"? Zawiera on wiele interesujących filmów, które mogą Cię zainteresować.\n\nPozdrawiamy,\nZespół SandlerVOD'
-            send_email(subject, message, client.email)
+            send_email(subject, message, (client.email, ))
 
     # 5. Powiadomienie o nowym filmie w ofercie
     new_movies = Movie.objects.filter(release_year=date.today().year)
@@ -52,7 +52,7 @@ def send_custom_emails():
             for new_movie in new_movies:
                 subject = 'Mamy nowy film!'
                 message = f'Cześć {client.first_name},\n\nMamy nowy film w naszej ofercie! "{new_movie.title}" jest już dostępny w naszej bibliotece.\n\nPozdrawiamy,\nZespół SandlerVOD'
-                send_email(subject, message, client.email)
+                send_email(subject, message, (client.email, ))
 
     # 6. Sugerowanie pakietu na podstawie obecnych subskrypcji klienta
     for client in Client.objects.all():
@@ -66,7 +66,7 @@ def send_custom_emails():
                 if suggested_package['package__name'] != current_package.name:
                     subject = 'Sprawdź nasz polecany pakiet!'
                     message = f'Cześć {client.first_name}, \n\nZauważyliśmy, że masz pakiet "{current_package.name}". Wielu naszych użytkowników, którzy mają ten pakiet, również subskrybuje pakiet {suggested_package["package__name"]}". Może warto go sprawdzić?\n\nPozdrawiamy,\nZespół SandlerVOD'
-                    send_email(subject, message, client.email)
+                    send_email(subject, message, (client.email, ))
 
     # 7. Sugerowanie filmów z wysokimi ocenami, których klient jeszcze nie oglądał
     for client in Client.objects.all():
@@ -78,7 +78,7 @@ def send_custom_emails():
                 if package not in [sub.package for sub in client_subscriptions]:
                     subject = 'Odkryj filmy, które mogą Ci się spodobać!'
                     message = f'Cześć {client.first_name},\n\nZauważyliśmy, że nie oglądałeś jeszcze filmu "{movie.title}", który ma wysoką ocenę. Znajduje się on w pakiecie "{package.name}". Może warto go sprawdzić?\n\nPozdrawiamy,\nZespół SandlerVOD'
-                    send_email(subject, message, client.email)
+                    send_email(subject, message, (client.email, ))
 
     # 8. Zachęcanie klientów do podzielenia się opinią na temat filmów z ich obecnych subskrypcji
     for client in Client.objects.all():
@@ -90,7 +90,7 @@ def send_custom_emails():
             for movie in movies_in_package:
                 subject = 'Podziel się swoją opinią!'
                 message = f'Cześć {client.first_name},\n\nOstatnio miałeś dostęp do filmu "{movie.title}" dzięki subskrypcji pakietu "{package.name}". Chcielibyśmy poznać Twoją opinię na jego temat! Kliknij poniższy link, aby dodać swoją recenzję:\n\n[link do recenzji]\n\nPozdrawiamy,\nZespół SandlerVOD'
-                send_email(subject, message, client.email)
+                send_email(subject, message, (client.email, ))
 
     # 9. Wysyłanie e-maili do użytkowników, którzy nie korzystali z platformy przez ostatni miesiąc
     one_month_ago = date.today() - timedelta(days=30)
@@ -104,6 +104,6 @@ def send_custom_emails():
         if not recent_subscription:
             subject = 'Tęsknimy za Tobą w SandlerVOD!'
             message = f'Cześć {client.first_name},\n\nZauważyliśmy, że nie korzystałeś z naszej platformy od jakiegoś czasu. Mamy dla Ciebie specjalną ofertę! Wróć do nas i skorzystaj z 10% zniżki na dowolny pakiet!\n\nPozdrawiamy,\nZespół SandlerVOD'
-            send_email(subject, message, client.email)
+            send_email(subject, message, (client.email, ))
 
     print(f"Wysłano e-maile do klientów.")

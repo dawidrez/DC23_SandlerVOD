@@ -134,3 +134,5 @@ EMAIL_PORT = 587
 EMAIL_HOST = env('EMAIL_HOST', default='')
 EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='user@gmail.com')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='yourpassword')
+
+AUTH_USER_MODEL = 'app.Client'
