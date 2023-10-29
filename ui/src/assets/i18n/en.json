@@ -1,6 +1,7 @@
 {
   "commons": {
     "login": "Log in",
+    "register": "Register",
     "email": "Email",
     "password": "Password",
     "firstName": "First Name",
