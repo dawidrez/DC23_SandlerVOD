@@ -2,6 +2,15 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from apscheduler.schedulers.background import BackgroundScheduler
+from app.scheduled_tasks import send_custom_emails
+
+
+def start_scheduler():
+    scheduler = BackgroundScheduler(
+        job_defaults={'misfire_grace_time': 24*60*60})
+    scheduler.add_job(send_custom_emails, 'interval', minutes=1)
+    scheduler.start()
 
 
 def main():
@@ -19,4 +28,6 @@ def main():
 
 
 if __name__ == '__main__':
+    if os.environ.get('RUN_MAIN') == 'true':
+        start_scheduler()
     main()
