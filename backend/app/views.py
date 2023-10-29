@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from .authentication import ClientEmailAuthentication
 from .models import Package, Movie, Subscription, Client
 from .serializers import SubscriptionSerializer, PackageSerializer, MovieSerializer, ClientSerializer
+from .utils.xml_utils import generate_invoice_xml
 
 
 @api_view(('GET',))
@@ -79,5 +80,6 @@ class SubscriptionViewSet(viewsets.ViewSet):
         request.data.update({"client": self.request.user.pk})
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        subscription = serializer.save()
+        generate_invoice_xml(subscription)
         return Response(serializer.data, status.HTTP_201_CREATED)
