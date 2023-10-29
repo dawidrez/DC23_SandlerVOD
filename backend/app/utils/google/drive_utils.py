@@ -138,7 +138,6 @@ def download_file(file_name, folder_id, save_path='./temp'):
     done = False
     while done is False:
         status, done = downloader.next_chunk()
-        print(f"Download {int(status.progress() * 100)}%.")
 
     with open(f"{save_path}/{file_name}", 'wb') as f:
         f.write(file.getvalue())
