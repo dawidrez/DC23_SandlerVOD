@@ -2,9 +2,6 @@ from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.db import models
 
-class RoleTypes(models.TextChoices):
-    ADMIN = 'admin'
-    CLIENT = 'client'
 
 class GenderTypes(models.TextChoices):
     MALE = 'male'
@@ -33,11 +30,6 @@ class Client(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=255)
     second_name = models.CharField(max_length=255)
-    role = models.CharField(
-        max_length=255,
-        choices=RoleTypes.choices,
-        default=RoleTypes.CLIENT,
-    )
     gender = models.CharField(
         max_length=255,
         choices=GenderTypes.choices,
