@@ -8,7 +8,7 @@
     "auction": "Aukcja",
     "archive": "Archiwum",
     "in-stock": "W magazynie",
-    "home-subtitle": "Maksymalizuj wartość, minimalizuj koszty",
+    "home-subtitle": "Czasami czuję się jak idiota. Ale jestem idiotą, więc jakoś to się zgadza.",
     "description": "Opis",
     "save": "Zapisz",
     "pull-cars": "Aktualizuj wszystkie samochody",
@@ -33,7 +33,21 @@
     "EXPIRED": "WYGAŚNIĘTY",
     "cars-line": "Linia samochodów",
     "to-register": "Do rejestracji",
-    "to-login": "Do Logowania"
+    "to-login": "Do Logowania",
+    "packages": "Wszystkie pakiety",
+    "register": "Zarejestruj się",
+    "subscription-date": "Data subskrypcji",
+    "my-packages": "Moje pakiety",
+    "no-subscription": "Brak subskrypcji",
+    "street": "Ulica",
+    "city": "Miasto",
+    "gender": "Płeć",
+    "validation": {
+      "date-required": "Ta data jest wymagana!",
+      "date-from-required": "Wymagana data od",
+      "date-to-required": "Wymagana data do",
+      "date-range-required": "Wymagany zakres dat"
+    }
   },
 
   "car": {

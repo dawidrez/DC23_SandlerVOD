@@ -26,8 +26,7 @@ export class HeaderComponent {
   languageControl = new FormControl('en', Validators.required);
   languageOptions: any[] = [
     { icon: 'fi fi-gb', value: 'en' },
-    { icon: 'fi fi-ua', value: 'uk' },
-    { icon: 'fi fi-cz', value: 'cz' }
+    { icon: 'fi fi-pl', value: 'pl' },
   ];
   localStorageTranslateKey: string = 'LANGUAGE'
   screenDetectorObject: ScreenDetector;
@@ -61,12 +60,12 @@ export class HeaderComponent {
     })
   }
 
-  openByView(view: Views[]) {
+  openByView(view: any) {
     this.router.navigate(view)
   }
 
-  isUserHasAdminRole() {
-    return this.authService.isLoggedIn() && this.userService.hasRole(UserRole.ADMIN);
+  isUserLoggedIn() {
+    return this.authService.isLoggedIn();
   }
 
   logout() {

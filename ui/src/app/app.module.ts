@@ -23,14 +23,16 @@ import { HeaderComponent } from 'src/components/header/header.component';
 import { FooterComponent } from 'src/components/footer/footer.component';
 import { QuillModule } from 'ngx-quill';
 import { PackagesComponent } from 'src/components/packages/packages.component';
+import { PackagePreviewComponent } from 'src/components/packages/package-preview/package-preview.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         AuthComponent,
         PackagesComponent,
+        PackagePreviewComponent,
         HeaderComponent,
-        FooterComponent
+        FooterComponent,
     ],
     imports: [
         HammerModule,

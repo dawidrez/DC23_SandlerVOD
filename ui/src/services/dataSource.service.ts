@@ -1,13 +1,15 @@
 import { Inject, Injectable, PLATFORM_ID } from "@angular/core";
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { environment } from "./../environments/environment";
 import { isPlatformBrowser, isPlatformServer } from "@angular/common";
+import { AuthService } from "./auth.service";
 @Injectable({
     providedIn: "root",
 })
 export class DataSourceService {
     hostUrl = "";
+    private readonly localStorageUser = "AUTH_USER";
     constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {
         if (isPlatformBrowser(this.platformId)) {
             this.hostUrl = '';
@@ -23,12 +25,31 @@ export class DataSourceService {
         return this.http.get(`${this.hostUrl}${restMapping}`, { params: data });
     }
 
+    getWithUserEmailInHeaderParam(restMapping: string): Observable<object> {
+        const userEmail = window.localStorage.getItem(this.localStorageUser) || '';
+        const headers = new HttpHeaders().set('X-EMAIL', JSON.parse(userEmail));
+        return this.http.get(`${this.hostUrl}${restMapping}`, {
+            headers: headers,
+            responseType: "json",
+        });
+    }
+
     // Create
     post(restMapping: string, data: any, httpParam?: boolean): Observable<any> {
         const requestParams = this.prepareRequestParams(data, httpParam);
 
         return this.http.post(`${this.hostUrl}${restMapping}`, requestParams.dataPost, {
             headers: requestParams.headerOptions,
+            responseType: "json",
+        });
+    }
+
+    postWithUserEmailInHeaderParam(restMapping: string, data: any): Observable<any> {
+        // const requestParams = this.prepareRequestParams(data, httpParam);
+        const userEmail = window.localStorage.getItem(this.localStorageUser) || '';
+        const headers = new HttpHeaders().set('X-EMAIL', JSON.parse(userEmail));
+        return this.http.post(`${this.hostUrl}${restMapping}`, data, {
+            headers: headers,
             responseType: "json",
         });
     }
@@ -75,6 +96,7 @@ export class DataSourceService {
 
         if (httpParam !== undefined) {
             headerOptions = { "Content-Type": "application/x-www-form-urlencoded" };
+            // headerOptions = { "X-EMAIL": "application/x-www-form-urlencoded" }
             Object.keys(data).forEach((key) => {
                 dataPost = dataPost.append(key, data[key]);
             });

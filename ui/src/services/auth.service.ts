@@ -9,62 +9,60 @@ import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 })
 export class AuthService {
 
-    private readonly baseUrl = "/rest/auth";
+    private readonly baseUrl = "/api/clients/";
     private readonly localStorageUser = "AUTH_USER";
-    private readonly localStorageUsers = "USERS";
+    // private readonly localStorageUsers = "USERS";
 
     constructor(private dataSourceService: DataSourceService, private http: HttpClient,
         @Inject(PLATFORM_ID) private platformId: Object,) { }
 
     login(params: any): Observable<any> {
         //only email
-        const data = window.localStorage.getItem(this.localStorageUsers);
+        const data = window.localStorage.getItem(this.localStorageUser);
         if (!data) {
-            console.log('login false')
-            return of(null);
+            this.saveUser(params.email);
         }
-        const users = JSON.parse(data);
-        if (users.find((user: any) => user.email === params.email)) {
-            this.saveUser(users.find((user: any) => user.email === params.email));
-        }
-        else {
-            console.log('login false')
-            return of(null);
-        }
-        console.log('login true')
+        // const user = JSON.parse(data);
+        // if (!user) {
+        //     this.saveUser(params.email);
+        // }
+
+        console.log('login true');
+        // return this.dataSourceService.post(`${this.baseUrl}`, params);
         return of(this.getAuthenticatedUserData());
     }
 
     register(params: any): Observable<any> {
-        const data = window.localStorage.getItem(this.localStorageUsers);
-        console.log('register data: ', data);
-        if (data && Array.isArray(JSON.parse(data))) {
-            const users = JSON.parse(data);
-            return this.addNewUser(users, params);
-        }
-        else {
-            const users = [params];
-            return this.addNewUser(users, params, true);
-        }
+        // const data = window.localStorage.getItem(this.localStorageUsers);
+        console.log('register data: ', params);
+        // if (data && Array.isArray(JSON.parse(data))) {
+        //     const users = JSON.parse(data);
+        //     return this.addNewUser(users, params);
+        // }
+        // else {
+        //     const users = [params];
+        //     return this.addNewUser(users, params, true);
+        // }
+        return this.dataSourceService.post(`${this.baseUrl}`, params);
     }
 
-    addNewUser(users: any, params: any, forceAdd = false) {
-        if (forceAdd || !users.find((user: any) => user.email === params.email)) {
-            if (!forceAdd) {
-                users.push(params);
-            }
-            window.localStorage.setItem(this.localStorageUsers, JSON.stringify(users));
-            return of(params);
-        }
-        else {
-            return of(null);
-        }
-    }
+    // addNewUser(users: any, params: any, forceAdd = false) {
+    //     if (forceAdd || !users.find((user: any) => user.email === params.email)) {
+    //         if (!forceAdd) {
+    //             users.push(params);
+    //         }
+    //         window.localStorage.setItem(this.localStorageUsers, JSON.stringify(users));
+    //         return of(params);
+    //     }
+    //     else {
+    //         return of(null);
+    //     }
+    // }
 
-    saveUser(user: any): void {
+    saveUser(userEmail: any): void {
         if (isPlatformBrowser(this.platformId)) {
             window.localStorage.removeItem(this.localStorageUser);
-            window.localStorage.setItem(this.localStorageUser, JSON.stringify(user));
+            window.localStorage.setItem(this.localStorageUser, JSON.stringify(userEmail));
         }
     }
 

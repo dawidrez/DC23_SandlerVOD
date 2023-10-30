@@ -1,0 +1,149 @@
+<app-header></app-header>
+
+<div class="page-container" *ngIf="packageObject">
+  <p-card styleClass="custom-car-card">
+    <ng-template pTemplate="header">
+      <div class="flex justify-content-between">
+        <div class="flex justify-content-start align-items-center">
+          <p-button icon="bi bi-arrow-left" styleClass="p-button-rounded p-button-text custom-btn-size"
+            (onClick)="routerBack()"></p-button>
+          <div>
+            <div class="p-card-title">{{ packageObject.name }}</div>
+            <div class="p-card-subtitle">{{ packageObject.price + ' zł' }}</div>
+          </div>
+        </div>
+        <div class="flex justify-content-end align-items-center">
+          <app-date-range-select *ngIf="!isPackageAlreadyUserPackage()" label="commons.subscription-date"
+            [dateFromControl]="$any(subscriptionForm).controls['start_date']"
+            [dateToControl]="$any(subscriptionForm).controls['end_date']" [inputId]="'created-date-select'"
+            [useBackendDateFormat]="true" [convertBackendDatesFormatOnInit]="true" [min]="today">
+          </app-date-range-select>
+          <span
+            *ngIf="isPackageAlreadyUserPackage()">{{ (subscriptionForm.controls['start_date'].value | date: 'dd/MM/yyyy')+ ' - ' + (subscriptionForm.controls['end_date'].value | date: 'dd/MM/yyyy') }}</span>
+          <p-button *ngIf="!isPackageAlreadyUserPackage()" icon="bi bi-plus-circle"
+            styleClass="p-button-rounded p-button-text custom-btn-size" (onClick)="addPackage()"
+            [disabled]="subscriptionForm.invalid"></p-button>
+          <i *ngIf="isPackageAlreadyUserPackage()" class="bi bi-check-circle-fill ml-4"
+            style="color:var(--green-400);font-size: 25px"></i>
+        </div>
+      </div>
+    </ng-template>
+
+    <div #packagesContainer *ngIf="packageMovies">
+      <p-dataView [value]="packageMovies" [layout]="layout" [paginator]="true" (onPage)="onPageEvent($event)"
+        [rows]="32" [first]="32 * (filterForm.controls['page'].value || 0)" styleClass="featured-packages">
+        <ng-template let-movie pTemplate="gridItem">
+          <div class="featured-package-card relative">
+            <div class="card-content">
+
+              <div class="card-title-wrapper">
+                <h3 class="h3 card-title">
+                  <a [routerLink]="['/movies', movie.id]">{{movie.title}}</a>
+                </h3>
+                <data class="year" value="0">{{"☆ " + movie.rating}}</data>
+              </div>
+              <a [routerLink]="['/movies', movie.id]">
+                <ul class="card-list">
+                  <li class="card-list-item">
+                    <i class="bi bi-film"></i>
+                    <span class="card-item-text">{{movie.release_year || '---'}}</span>
+                  </li>
+                  <li class="card-list-item">
+                    <i class="bi bi-card-text"></i>
+                    <span class="card-item-text">{{movie.description || '---'}}</span>
+                  </li>
+                </ul>
+              </a>
+              <div class="card-price-wrapper">
+
+                <p-button icon="bi bi-link-45deg" [pTooltip]="'commons.copy-link' | translate" tooltipPosition="bottom"
+                  (onClick)="copyMovieLink(movie.id)" styleClass="p-button-rounded p-button-text p-button-sm">
+                </p-button>
+                <!-- 
+                          <p-button *ngIf="isUserHasAdminRole()" icon="pi pi-trash"
+                              [pTooltip]="'commons.delete' | translate" tooltipPosition="bottom"
+                              (onClick)="removeCar($event, car.id)" [loading]="car.loadingDelete"
+                              styleClass="p-button-rounded p-button-text p-button-sm p-button-danger">
+                          </p-button> -->
+
+              </div>
+
+            </div>
+          </div>
+        </ng-template>
+      </p-dataView>
+      <!-- </p-card> -->
+    </div>
+
+    <!-- <div class="row" *ngIf="isPlatformBrowserOpened()">
+      <div class="col-12">
+        <div class="flex justify-content-center w-full">
+          <div class="lot_parameters w-full">
+
+            <div class="lot_parameter w-full">
+              <div class="lot_preview">
+                <i class="bi bi-calendar3"></i>
+              </div>
+              <div class="lot_box">
+                <div class="lot_category">
+                  {{ "car.registration-year" | translate }}
+                </div>
+                <div class="lot_value">{{ packageObject.registrationYear }}</div>
+              </div>
+            </div>
+
+            <div class="lot_parameter w-full">
+              <div class="lot_preview">
+                <i class="bi bi-speedometer"></i>
+              </div>
+              <div class="lot_box">
+                <div class="lot_category">{{ "car.mileage" | translate }}</div>
+                <div class="lot_value">
+                  {{
+                    car.mileage
+                      ? (car.mileage | number) +
+                        " " +
+                        ("commons.km-short" | translate)
+                      : "---"
+                  }}
+                </div>
+              </div>
+            </div>
+            <div class="lot_parameter w-full">
+              <div class="lot_preview">
+                <i class="bi bi-ev-front bi-lg"></i>
+              </div>
+              <div class="lot_box">
+                <div class="lot_category">
+                  {{ "car.engine-displacement" | translate }}
+                </div>
+                <div class="lot_value">
+                  {{
+                    car.engineDisplacement
+                      ? (car.engineDisplacement | number) +
+                        " " +
+                        ("commons.cubic-centimetres" | translate)
+                      : "---"
+                  }}
+                </div>
+              </div>
+            </div>
+            <div class="lot_parameter w-full">
+              <div class="lot_preview">
+                <i class="bi bi-fuel-pump"></i>
+              </div>
+              <div class="lot_box">
+                <div class="lot_category">
+                  {{ "car.fuel-type" | translate }}
+                </div>
+                <div class="lot_value">{{ getFuelTypeByLanguage() }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+
+  </p-card>
+</div>

@@ -3,6 +3,7 @@ import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { PrimeNgModule } from "src/app/primeng.module";
 import { TranslateModule } from "@ngx-translate/core";
+import { DateRangeSelectComponent } from "./date-range-select.component/date-range-select.component";
 @NgModule({
     imports: [
         CommonModule,
@@ -12,10 +13,10 @@ import { TranslateModule } from "@ngx-translate/core";
         TranslateModule,
     ],
     exports: [
-        //component: SearchPhraseComponent, ...
+        DateRangeSelectComponent
     ],
     declarations: [
-        //component: SearchPhraseComponent, ...
+        DateRangeSelectComponent
     ],
     providers: [],
 })

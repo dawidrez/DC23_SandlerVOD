@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -6,6 +6,7 @@ import { Views } from 'src/enums/Views.enum';
 import { AppInitService } from 'src/services/appInit.service';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { AnimationEvent } from '@angular/animations';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
     selector: 'app-auth',
@@ -31,26 +32,33 @@ export class AuthComponent implements OnInit {
 
     mode: string = this.route.snapshot.data['mode'];
     editForm: FormGroup = new FormGroup({
-        firstname: new FormControl(null),
-        lastname: new FormControl(null),
+        first_name: new FormControl(null),
+        second_name: new FormControl(null),
         email: new FormControl(null, [Validators.required, Validators.email]),
-        address: new FormControl(null),
+        street_address: new FormControl(null),
+        city: new FormControl(null),
         gender: new FormControl(null),
-        role: new FormControl("USER"),
     });
+
+    genderOptions = [
+        { name: 'Male', value: "male" },
+        { name: 'Female', value: "female" },
+        { name: 'Other', value: "other" },
+    ];
     validators = Validators;
     loading = false;
 
     constructor(private route: ActivatedRoute,
+        @Inject(DOCUMENT) public document: Document,
         private authService: AuthService,
         private appInitService: AppInitService,
         private router: Router) {
         if (this.mode === 'register') {
-            this.editForm.controls['firstname'].setValidators(Validators.required);
-            this.editForm.controls['address'].setValidators(Validators.required);
-            this.editForm.controls['lastname'].setValidators(Validators.required);
+            this.editForm.controls['first_name'].setValidators(Validators.required);
+            this.editForm.controls['street_address'].setValidators(Validators.required);
+            this.editForm.controls['city'].setValidators(Validators.required);
+            this.editForm.controls['second_name'].setValidators(Validators.required);
             this.editForm.controls['gender'].setValidators(Validators.required);
-            this.editForm.controls['role'].setValidators(Validators.required);
         }
     }
 
@@ -62,30 +70,30 @@ export class AuthComponent implements OnInit {
 
     updateModeHelper() {
         if (this.mode === 'register') {
-            this.editForm.controls['firstname'].setValidators(Validators.required);
-            this.editForm.controls['address'].setValidators(Validators.required);
-            this.editForm.controls['lastname'].setValidators(Validators.required);
+            this.editForm.controls['first_name'].setValidators(Validators.required);
+            this.editForm.controls['street_address'].setValidators(Validators.required);
+            this.editForm.controls['city'].setValidators(Validators.required);
+            this.editForm.controls['second_name'].setValidators(Validators.required);
             this.editForm.controls['gender'].setValidators(Validators.required);
-            this.editForm.controls['role'].setValidators(Validators.required);
 
-            this.editForm.controls['firstname'].updateValueAndValidity();
-            this.editForm.controls['address'].updateValueAndValidity();
-            this.editForm.controls['lastname'].updateValueAndValidity();
+            this.editForm.controls['first_name'].updateValueAndValidity();
+            this.editForm.controls['street_address'].updateValueAndValidity();
+            this.editForm.controls['city'].updateValueAndValidity();
+            this.editForm.controls['second_name'].updateValueAndValidity();
             this.editForm.controls['gender'].updateValueAndValidity();
-            this.editForm.controls['role'].updateValueAndValidity();
         }
         else {
-            this.editForm.controls['firstname'].clearValidators();
-            this.editForm.controls['address'].clearValidators();
-            this.editForm.controls['lastname'].clearValidators();
+            this.editForm.controls['first_name'].clearValidators();
+            this.editForm.controls['street_address'].clearValidators();
+            this.editForm.controls['city'].clearValidators();
+            this.editForm.controls['second_name'].clearValidators();
             this.editForm.controls['gender'].clearValidators();
-            this.editForm.controls['role'].clearValidators();
 
-            this.editForm.controls['firstname'].updateValueAndValidity();
-            this.editForm.controls['address'].updateValueAndValidity();
-            this.editForm.controls['lastname'].updateValueAndValidity();
+            this.editForm.controls['first_name'].updateValueAndValidity();
+            this.editForm.controls['street_address'].updateValueAndValidity();
+            this.editForm.controls['city'].updateValueAndValidity();
+            this.editForm.controls['second_name'].updateValueAndValidity();
             this.editForm.controls['gender'].updateValueAndValidity();
-            this.editForm.controls['role'].updateValueAndValidity();
         }
     }
 
@@ -140,18 +148,26 @@ export class AuthComponent implements OnInit {
     register() {
         if (this.editForm.valid) {
             this.loading = true;
-            this.authService.register(this.getFormValuesWithoutNulls(this.editForm)).subscribe((data: any) => {
-                if (!data) {
-                    console.log('no data');
+            this.authService.register(this.getFormValuesWithoutNulls(this.editForm)).subscribe(
+                (data: any) => {
+                    if (!data) {
+                        console.log('no data');
+                        this.editForm.controls['email'].setErrors({ 'email-already-exist': true });
+                        this.loading = false;
+                    }
+                    else {
+                        console.log('new data exist');
+                        this.loading = false;
+                        this.authService.saveUser(this.editForm.controls['email'].value);
+                        this.login();
+                    }
+                },
+                (error: any) => {
                     this.editForm.controls['email'].setErrors({ 'email-already-exist': true });
                     this.loading = false;
+                    console.log(error);
                 }
-                else {
-                    console.log('new data exist');
-                    this.loading = false;
-                    this.login();
-                }
-            })
+            )
         }
     }
 

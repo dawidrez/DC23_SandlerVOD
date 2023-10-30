@@ -1,6 +1,7 @@
 {
   "commons": {
     "login": "Log in",
+    "register": "Register",
     "email": "Email",
     "password": "Password",
     "firstName": "First Name",
@@ -8,7 +9,7 @@
     "auction": "Auction",
     "archive": "Archive",
     "in-stock": "In Stock",
-    "home-subtitle": "Maximize Value, Minimize Cost",
+    "home-subtitle": "Sometimes I feel like an idiot. But I am an idiot so it kinda works out",
     "description": "Description",
     "save": "Save",
     "pull-cars": "Update All Cars",
@@ -33,7 +34,21 @@
     "EXPIRED": "EXPIRED",
     "cars-line": "Cars Line",
     "to-register": "To Register",
-    "to-login": "To Login"
+    "to-login": "To Login",
+    "packages": "All Packages",
+    "register": "Register",
+    "subscription-date": "Subscription Date",
+    "my-packages": "My Packages",
+    "no-subscription": "No subscription",
+    "street": "Street",
+    "city": "City",
+    "gender": "Gender",
+    "validation": {
+      "date-required": "This date is required!",
+      "date-from-required": "Date from required",
+      "date-to-required": "Date to required",
+      "date-range-required": "Date range required"
+    }
   },
 
   "car": {

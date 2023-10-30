@@ -1,0 +1,25 @@
+<div class="p-input-filled p-float-label" [class.p-required]="(dateFromControl && dateFromControl.hasValidator(validators.required)) ||
+     (dateToControl && dateToControl.hasValidator(validators.required))">
+    <p-calendar [(ngModel)]="rangeDates" (ngModelChange)="rangeChange($event)" selectionMode="range"
+        placeholder="{{'ㅤ'}}" styleClass="full-width" [inputId]="inputId" [touchUI]="screenDetectorObject.isMobile"
+        [readonlyInput]="readonlyInput" [minDate]="min" [maxDate]="max" [appendTo]="document.body"
+        [showClear]="showClear" [disabled]="disabled" dateFormat="dd/mm/yy">
+    </p-calendar>
+    <label for="{{inputId}}">{{ label | translate }}</label>
+</div>
+<small class="control-invalid" *ngIf="(dateFromControl && dateFromControl.dirty && dateFromControl.errors !== null) ||
+        (dateToControl && dateToControl.dirty && dateToControl.errors !== null)">
+    <span *ngIf="!dateToControl.hasError('required') && dateFromControl.hasError('required')"
+        [style.position]="absoluteError ? 'absolute' : ''">
+        {{ 'commons.validation.date-from-required' | translate }}
+    </span>
+    <span *ngIf="!dateFromControl.hasError('required') && dateToControl.hasError('required')"
+        [style.position]="absoluteError ? 'absolute' : ''">
+        {{ 'commons.validation.date-to-required' | translate }}
+    </span>
+    <span *ngIf="dateFromControl.hasError('required') && dateToControl.hasError('required')"
+        [style.position]="absoluteError ? 'absolute' : ''">
+        {{ 'commons.validation.date-range-required' | translate }}
+    </span>
+
+</small>
