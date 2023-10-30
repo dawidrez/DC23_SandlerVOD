@@ -1,6 +1,7 @@
 {
   "commons": {
     "login": "Zaloguj się",
+    "register": "Zarejestruj się",
     "email": "Email",
     "password": "Hasło",
     "firstName": "Imię",
@@ -35,7 +36,6 @@
     "to-register": "Do rejestracji",
     "to-login": "Do Logowania",
     "packages": "Wszystkie pakiety",
-    "register": "Zarejestruj się",
     "subscription-date": "Data subskrypcji",
     "my-packages": "Moje pakiety",
     "no-subscription": "Brak subskrypcji",

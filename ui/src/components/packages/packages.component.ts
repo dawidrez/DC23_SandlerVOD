@@ -96,6 +96,8 @@ export class PackagesComponent implements OnInit, OnDestroy {
                     return this.userPackages.some((userPackage: any) => userPackage.package === packageItem.id);
                 });
             }
+
+            console.log(this.filteredPackages);
         });
     }
 

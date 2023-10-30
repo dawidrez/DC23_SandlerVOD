@@ -18,10 +18,8 @@ export class AuthService {
 
     login(params: any): Observable<any> {
         //only email
-        const data = window.localStorage.getItem(this.localStorageUser);
-        if (!data) {
-            this.saveUser(params.email);
-        }
+        // const data = window.localStorage.getItem(this.localStorageUser);
+        this.saveUser(params.email);
         // const user = JSON.parse(data);
         // if (!user) {
         //     this.saveUser(params.email);
