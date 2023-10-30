@@ -11,6 +11,9 @@
       <p-button (onClick)="openByView([views.PACKAGES])" [label]="'commons.packages' | translate"
         styleClass="p-button-text">
       </p-button>
+      <p-button *ngIf="isUserLoggedIn()" (onClick)="openByView([views.PACKAGES, 'me'])"
+        [label]="'commons.my-packages' | translate" styleClass="p-button-text">
+      </p-button>
       <!-- <p-button *ngIf="isUserHasAdminRole()" (onClick)="openByView([views.ARCHIVE])"
         [label]="'commons.archive' | translate" styleClass="p-button-text">
       </p-button> -->
@@ -52,6 +55,14 @@
         </p-selectButton>
       </div> -->
     <!-- </div> -->
+    <div class="flex justify-content-center" *ngIf="!screenDetectorObject.isMobile">
+      <p-selectButton [options]="languageOptions" [formControl]="languageControl" optionLabel="icon"
+        styleClass="custom-language-buttons" optionValue="value">
+        <ng-template let-item pTemplate>
+          <i [class]="item.icon"></i>
+        </ng-template>
+      </p-selectButton>
+    </div>
 
   </div>
 </header>

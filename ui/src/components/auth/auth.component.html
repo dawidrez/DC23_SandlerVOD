@@ -4,13 +4,13 @@
       <div class="illustration"><i class="bi bi-person-lock"></i></div>
       <div class="row w-full" *ngIf="mode==='register'">
         <div class="p-input-filled">
-          <input pInputText formControlName="firstname" class="w-full"
+          <input pInputText formControlName="first_name" class="w-full"
             placeholder="{{ ('commons.firstName' | translate) + ' *'}}" />
         </div>
       </div>
       <div class="row w-full" *ngIf="mode==='register'">
         <div class="p-input-filled">
-          <input pInputText formControlName="lastname" class="w-full"
+          <input pInputText formControlName="second_name" class="w-full"
             placeholder="{{ ('commons.lastName' | translate) + ' *'}}" />
         </div>
       </div>
@@ -22,28 +22,26 @@
       </div>
       <div class="row w-full" *ngIf="mode==='register'">
         <div class="p-input-filled">
-          <input pInputText formControlName="address" class="w-full"
-            placeholder="{{ ('commons.address' | translate) + ' *'}}" />
+          <input pInputText formControlName="street_address" class="w-full"
+            placeholder="{{ ('commons.street' | translate) + ' *'}}" />
         </div>
       </div>
       <div class="row w-full" *ngIf="mode==='register'">
         <div class="p-input-filled">
-          <input pInputText formControlName="gender" class="w-full"
-            placeholder="{{ ('commons.gender' | translate) + ' *'}}" />
+          <input pInputText formControlName="city" class="w-full"
+            placeholder="{{ ('commons.city' | translate) + ' *'}}" />
         </div>
       </div>
-      <!-- <div class="row w-full">
+
+
+      <div class="row w-full" *ngIf="mode==='register'">
         <div class="p-input-filled">
-          <input pInputText formControlName="role" class="w-full"
-            placeholder="{{ ('commons.role' | translate) + ' *'}}" />
+          <p-dropdown styleClass="w-full" [options]="genderOptions" formControlName="gender" optionLabel="name"
+            optionValue="value" [appendTo]="document.body" [showClear]="true"
+            placeholder="{{'commons.gender' | translate}}"></p-dropdown>
         </div>
-      </div> -->
-      <!-- <div class="row w-full">
-        <div class="p-input-filled">
-          <p-password [placeholder]="('commons.password' | translate) + ' *'" formControlName="password"
-            styleClass="w-full input-full-width" [toggleMask]="true" [feedback]="false"></p-password>
-        </div>
-      </div> -->
+      </div>
+
       <div class="row w-full">
         <p-button [label]="mode === 'login' ? ('commons.login' | translate) : ('commons.register' | translate)"
           [loading]="loading" (onClick)="mode === 'login' ? login() : register()" styleClass="w-full">

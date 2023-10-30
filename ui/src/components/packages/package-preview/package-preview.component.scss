@@ -1,3 +1,168 @@
+::ng-deep .p-inplace-manual {
+  .p-inplace-display {
+    display: block !important;
+    padding: 0;
+
+    .p-panel-header {
+      background: transparent;
+    }
+
+    .p-panel-title {
+      background: transparent;
+    }
+
+    .p-panel-content {
+      background: transparent;
+    }
+  }
+
+  &.no-selection {
+    .p-inplace-display {
+      // cursor: not-allowed !important;
+
+      &:hover {
+        background: initial;
+        color: initial;
+      }
+    }
+  }
+
+  p-inputNumber {
+    input {
+      width: 100%;
+    }
+  }
+}
+
+::ng-deep .custom-car-card {
+  transition: all 0.2s;
+  background: transparent;
+  border-radius: var(--radius-18);
+  padding-top: 20px;
+  padding-bottom: 20px;
+  box-shadow: none;
+  // margin: 15px;
+}
+
+::ng-deep .custom-btn-size {
+  font-size: 25px;
+}
+
+::ng-deep .no-button-padding {
+  padding: 0;
+}
+
+.lot_preview {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.lot_box {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.lot_category {
+  font-size: 12px;
+  color: var(--text-color-secondary);
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.lot_value {
+  margin-top: 2px;
+}
+
+.lot_parameter {
+  display: flex;
+  align-items: center;
+  padding: 32px 0px;
+  border-top: 1px solid hsla(100, 100%, 100%, 0.4);
+}
+
+.col-md-4 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lot_parameters {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.lot_preview i {
+  font-size: 33px;
+  margin-right: 5px;
+  color: hsla(100, 100%, 100%, 0.8);
+}
+
+.auction_end_date {
+  color: rgb(255, 102, 40);
+}
+
+::ng-deep .p-panel-description {
+  .p-panel-header {
+    background-color: var(--gradient);
+  }
+
+  margin-top: 25px;
+}
+
+.page-container {
+  width: 95%;
+  margin-inline: auto;
+}
+
+.grid-images {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  grid-gap: 20px;
+  align-items: stretch;
+
+  img {
+    box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.3);
+    height: 80px;
+    object-fit: cover;
+    width: 100%;
+  }
+}
+
+
+// @media (min-width: 580px) {
+//   .page-container {
+//     max-width: 540px;
+//     margin-inline: auto;
+//   }
+// }
+
+// @media (min-width: 768px) {
+//   .page-container {
+//     max-width: 720px;
+//   }
+// }
+
+@media (min-width: 1055px) {
+  // .page-container {
+  //   max-width: 960px;
+  // }
+
+  :host ::ng-deep .custom-galleria {
+    &.p-galleria {
+      .p-galleria-item {
+
+        img,
+        .gallery-button-container {
+          min-height: 500px;
+        }
+      }
+    }
+  }
+}
+
 li {
   list-style: none;
 }
@@ -14,102 +179,7 @@ a {
   box-sizing: border-box;
 }
 
-// ::ng-deep {
-
-//   figure,
-//   .card-list,
-//   .card-title-wrapper {
-//     margin: 0;
-//     padding: 0;
-//     box-sizing: border-box;
-//   }
-// }
-
-a,
-img,
-span,
-label,
-button,
-i {
-  display: block;
-}
-
-button {
-  background: none;
-  border: none;
-  font: inherit;
-}
-
-button {
-  cursor: pointer;
-}
-
-button,
-a {
-  transition: var(--transition);
-}
-
-.h1,
-.h2,
-.h3 {
-  color: var(--text-color);
-  font-family: var(--ff-nunito);
-  line-height: 1.4;
-}
-
-.h1 {
-  font-size: var(--fs-1);
-  text-transform: uppercase;
-}
-
-.h2,
-.h3 {
-  font-weight: var(--fw-400);
-}
-
-.h2 {
-  font-size: var(--fs-2);
-}
-
-.h3 {
-  font-size: var(--fs-4);
-}
-
-.btn {
-  position: relative;
-  background: var(--primary-color);
-  color: var(--primary-color-text);
-  min-width: var(--width, 40px);
-  min-height: var(--height, 40px);
-  padding: 5px;
-  display: grid;
-  place-items: center;
-  border-radius: var(--radius-14);
-  font-family: var(--ff-nunito);
-  font-size: var(--fs-6);
-  font-weight: var(--fw-600);
-  overflow: hidden;
-}
-
-.btn::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to right, hsla(0, 0%, 100%, 0.4), transparent);
-  opacity: 0;
-  pointer-events: none;
-  transition: var(--transition);
-}
-
-.btn:is(:hover, :focus) {
-  box-shadow: var(--shadow-1);
-}
-
-.btn:is(:hover, :focus)::before {
-  opacity: 1;
-}
-
-::ng-deep .featured-cars {
+::ng-deep .featured-packages {
   max-width: 95%;
   // margin-inline: auto;
   padding-inline: 15px;
@@ -182,6 +252,7 @@ a {
   .featured-package-card .card-title>a {
     color: inherit;
     width: 100%;
+    display: block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -211,11 +282,6 @@ a {
   }
 
   .featured-package-card .card-list-item {
-    &:nth-child(2n) {
-      justify-content: end;
-    }
-
-
     display: flex;
     align-items: center;
     gap: 8px;
@@ -286,79 +352,13 @@ a {
   #HERO
 \*-----------------------------------*/
 
-.hero {
-  padding-top: 120px;
-  overflow: hidden;
-}
-
-.hero-title {
-  max-width: 20ch;
-  margin-bottom: 15px;
-}
-
-.hero-text {
-  color: var(--text-color-secondary);
-  line-height: 1.8;
-  margin-bottom: 30px;
-}
-
-.hero-banner {
-  display: none;
-}
-
-.hero-form {
-  background: var(--gradient);
-  // border: 1px solid var(--white);
-  box-shadow: var(--shadow-1);
-  border-radius: var(--radius-18);
-  font-family: var(--ff-nunito);
-}
-
-.input-wrapper {
-  padding: 15px 20px;
-  max-width: initial;
-  overflow: auto;
-}
-
-.input-wrapper:not(:last-of-type) {
-  border-bottom: 1px solid hsla(0, 0%, 0%, 0.08);
-}
-
-.input-label {
-  color: var(--manatee);
-  font-size: var(--fs-6);
-  margin-bottom: 10px;
-}
-
-.input-field {
-  color: var(--space-cadet);
-  outline: 2px solid transparent;
-  outline-offset: 5px;
-  border-radius: 4px;
-  transition: var(--transition);
-}
-
-.input-field:focus {
-  outline-color: var(--carolina-blue);
-}
-
-.input-field::placeholder {
-  color: var(--text-color-secondary);
-}
-
-.hero-form .btn {
-  --width: calc(100% - 40px);
-  --height: 50px;
-  margin: 20px;
-  text-transform: uppercase;
-}
 
 
 
 @media (min-width: 350px) {
-  ::ng-deep .featured-cars {
+  ::ng-deep .featured-packages {
     .featured-package-card .card-list {
-      grid-template-columns: 0.5fr 1fr;
+      grid-template-columns: 0.1fr 1fr;
     }
 
     .featured-package-card .btn:last-child {
@@ -369,112 +369,24 @@ a {
 }
 
 @media (min-width: 768px) {
-  ::ng-deep .featured-cars {
+  ::ng-deep .featured-packages {
     .p-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
-
-  /**
-   * HERO
-   */
-
-  .hero {
-    position: relative;
-    min-height: 50vh;
-    display: flex;
-    align-items: center;
-    z-index: 1;
-  }
-
-  .hero-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 0.8fr;
-  }
-
-  .input-wrapper:not(:last-of-type) {
-    border-bottom: none;
-    border-right: 1px solid hsla(100, 100%, 100%, 0.08);
-  }
-
-  .input-wrapper {
-    font-size: 12px;
-    // max-width: 240px;
-    overflow: hidden;
-  }
-
-  .input-label {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .hero-banner {
-    display: block;
-    background: url("../../assets/img/banner.jpg") no-repeat;
-    background-size: cover;
-    background-position: left;
-    position: absolute;
-    top: 20px;
-    bottom: 50px;
-    left: 65%;
-    width: 500px;
-    border-radius: 30px;
-    z-index: -1;
-  }
-}
-
-@media (min-width: 992px) {
-  .hero .featured-cars {
-    width: 100%;
-  }
-
-  .input-wrapper {
-    font-size: 14px;
-  }
-
 }
 
 @media (min-width: 1200px) {
-  ::ng-deep .featured-cars {
+  ::ng-deep .featured-packages {
     .p-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
-  }
-
-  /**
-   * HERO
-   */
-
-  .hero {
-    min-height: 60vh;
-  }
-
-  .hero-banner {
-    left: auto;
-    right: 50px;
-    width: 630px;
-  }
-
-  .hero-form {
-    max-width: 900px !important;
-  }
-
-  .hero-form .btn {
-    --width: calc(100% - 40px);
-    --height: 50px;
-    margin: 20px;
-    text-transform: uppercase;
-  }
-
-  .input-wrapper {
-    font-size: 16px;
   }
 }
 
 
 @media (min-width: 1400px) {
-  ::ng-deep .featured-cars {
+  ::ng-deep .featured-packages {
     .p-grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }

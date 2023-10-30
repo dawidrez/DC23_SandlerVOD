@@ -23,6 +23,7 @@ import { AvatarGroupModule } from 'primeng/avatargroup';
 import { ListboxModule } from 'primeng/listbox';
 import { PasswordModule } from 'primeng/password';
 import { ChipModule } from 'primeng/chip';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
     imports: [],
@@ -50,6 +51,7 @@ import { ChipModule } from 'primeng/chip';
         ListboxModule,
         PasswordModule,
         ChipModule,
+        CalendarModule,
     ],
     providers: [ConfirmationService]
 })
