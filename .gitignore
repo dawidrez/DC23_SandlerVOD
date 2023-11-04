@@ -11,6 +11,7 @@ __pycache__
 .idea/
 
 backend/app/utils/google/service_account.json
+backend/temp
 
 ui/.angular
 
