@@ -1,4 +1,6 @@
+import os
 import xml.etree.ElementTree as ET
+import xml.dom.minidom
 from django.utils import timezone
 from datetime import timedelta
 from app.models import Subscription
@@ -89,5 +91,15 @@ def generate_invoice_xml(subscription):
     invoice_tree = ET.ElementTree(invoice)
 
     xml_content = ET.tostring(invoice, encoding="utf-8", xml_declaration=True)
-    print(xml_content.decode("utf-8"))
+    formated_xml = xml.dom.minidom.parseString(xml_content).toprettyxml(indent="    ", encoding="utf-8")
+    # print(xml_content.decode("utf-8"))
 
+    if not os.path.exists("./temp"):
+        os.makedirs("./temp")
+
+    temp_xml_filename = f"./temp/invoice_{subscription.id}.xml"
+
+    with open(temp_xml_filename, "wb") as f:
+        f.write(formated_xml)
+
+    return temp_xml_filename

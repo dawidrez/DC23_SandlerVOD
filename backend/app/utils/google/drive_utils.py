@@ -6,7 +6,8 @@ from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 
 
 SCOPES = ['https://www.googleapis.com/auth/drive']
-SERVICE_ACCOUNT_FILE = 'service_account.json'
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+SERVICE_ACCOUNT_FILE = os.path.join(CURRENT_DIR, 'service_account.json')
 PARENT_FOLDER_ID = "1olTChQIOOLS_0dAprGjxChUSTHEfQbbc"
 
 
@@ -79,11 +80,12 @@ def check_file_exists(file_name, folder_id=PARENT_FOLDER_ID):
     return False
 
 
-def upload_file(file_path, folder_id=PARENT_FOLDER_ID):
+def upload_file(file_path, folder_id=PARENT_FOLDER_ID, clean_up=False):
     """Upload file to Google Drive
     Args:
         file_path (str): path to local file
-        folder_id (str): id of folder in which file will be uploaded (OPTIONAL)
+        folder_id (str): id of folder in which file will be uploaded
+        clean_up (bool): if True, file will be deleted after upload
     """
 
     creds = authenticate()
@@ -107,6 +109,13 @@ def upload_file(file_path, folder_id=PARENT_FOLDER_ID):
         media_body=media,
         fields='id'
     ).execute()
+
+    if clean_up:
+        # wait until file is closed
+        while media._fd is not None and not media._fd.closed:
+            media._fd.close()
+
+        os.remove(file_path)
 
     print('File ID: %s' % file.get('id'))
 
