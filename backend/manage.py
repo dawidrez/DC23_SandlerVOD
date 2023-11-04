@@ -9,7 +9,7 @@ from app.scheduled_tasks import send_custom_emails
 def start_scheduler():
     scheduler = BackgroundScheduler(
         job_defaults={'misfire_grace_time': 24*60*60})
-    scheduler.add_job(send_custom_emails, 'interval', minutes=1)
+    scheduler.add_job(send_custom_emails, 'interval', minutes=60*24*7)
     scheduler.start()
 
 

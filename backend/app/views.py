@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 from .authentication import ClientEmailAuthentication
 from .models import Package, Movie, Subscription, Client
-from .serializers import SubscriptionSerializer, PackageSerializer, MovieSerializer, ClientSerializer
+from .serializers import SubscriptionSerializer, PackageSerializer, MovieSerializer, ClientSerializer, UpdateSubscriptionSerializer
 from .utils.xml_utils import generate_invoice_xml
 
 
@@ -34,6 +34,26 @@ class ClientViewsSet(viewsets.ViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status.HTTP_201_CREATED)
+
+    def update(self, request, pk, *args, **kwargs):
+        client = get_object_or_404(self.queryset, pk=pk)
+        user = request.user
+        if not user.is_superuser:
+            return Response({"detail": "This action is forbidden"}, status.HTTP_403_FORBIDDEN)
+        serializer = self.serializer_class(client, data=request.data, partial=False)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status.HTTP_200_OK)
+
+    def partial_update(self, request, pk, *args, **kwargs):
+        client = get_object_or_404(self.queryset, pk=pk)
+        user = request.user
+        if not user.is_superuser:
+            return Response({"detail": "This action is forbidden"}, status.HTTP_403_FORBIDDEN)
+        serializer = self.serializer_class(client, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status.HTTP_200_OK)
 
 
 class PackageViewSet(viewsets.ViewSet):
@@ -83,3 +103,16 @@ class SubscriptionViewSet(viewsets.ViewSet):
         subscription = serializer.save()
         generate_invoice_xml(subscription)
         return Response(serializer.data, status.HTTP_201_CREATED)
+
+    def partial_update(self, request, pk, *args, **kwargs):
+        subscription = get_object_or_404(self.queryset, pk=pk)
+        user = request.user
+        if not user.is_superuser:
+            return Response({"detail": "This action is forbidden"}, status.HTTP_403_FORBIDDEN)
+        serializer = UpdateSubscriptionSerializer(subscription, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status.HTTP_200_OK)
+
+
+

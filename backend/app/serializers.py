@@ -36,3 +36,24 @@ class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
         fields = "__all__"
+
+
+class UpdateSubscriptionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Subscription
+        fields = (
+            "id",
+            "client",
+            "package",
+            "start_date",
+            "end_date",
+        )
+        read_only_fields = (
+            "id",
+            "client",
+            "start_date",
+            "package",
+        )
+
+
