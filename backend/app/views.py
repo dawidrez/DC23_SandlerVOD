@@ -103,7 +103,7 @@ class SubscriptionViewSet(viewsets.ViewSet):
         serializer.is_valid(raise_exception=True)
         subscription = serializer.save()
         invoice_xml, invoice_filename = generate_invoice_xml(subscription)
-        invoice_html = generate_invoice_html(invoice_xml)
+        invoice_html = generate_invoice_html(invoice_xml, subscription.client)
 
         print(invoice_xml)
         print(invoice_html)
