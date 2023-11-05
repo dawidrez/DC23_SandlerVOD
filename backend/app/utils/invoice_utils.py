@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 from django.utils import timezone
 from datetime import timedelta
 from app.models import Subscription
+import random
 
 def calculate_price(package, start_date, end_date):
     # Obliczenie liczby rozpoczętych miesięcy subskrypcji
@@ -27,23 +28,21 @@ def generate_invoice_xml(subscription):
     invoice_date.text = timezone.now().strftime("%Y-%m-%d")
 
     invoice_number = ET.SubElement(header, "invoice_number")
-    invoice_number.text = "123456"  # Unikalny numer faktury
+    invoice_number.text = ''.join(random.choice('0123456789') for _ in range(6))  # Unikalny numer faktury
 
     supplier_data = ET.SubElement(header, "supplier_data")
     supplier_name = ET.SubElement(supplier_data, "name")
-    supplier_name.text = "Nazwa Dostawcy"
+    supplier_name.text = "Sandler VOD"
     supplier_address = ET.SubElement(supplier_data, "address")
-    supplier_address.text = "Adres Dostawcy"
+    supplier_address.text = "Narutowicza 11/12"
     supplier_tax_id = ET.SubElement(supplier_data, "tax_id")
-    supplier_tax_id.text = "NIP Dostawcy"
+    supplier_tax_id.text = "1231231231"
 
     customer_data = ET.SubElement(header, "customer_data")
     customer_name = ET.SubElement(customer_data, "name")
     customer_name.text = f"{client.first_name} {client.second_name}"
     customer_address = ET.SubElement(customer_data, "address")
     customer_address.text = client.street_address + ", " + client.city
-    customer_tax_id = ET.SubElement(customer_data, "tax_id")
-    customer_tax_id.text = "NIP Klienta"
 
     # Opis transakcji
     transaction = ET.SubElement(invoice, "transaction")
@@ -86,8 +85,118 @@ def generate_invoice_xml(subscription):
     bank_account_number = ET.SubElement(bank_account, "number")
     bank_account_number.text = "12345678901234567890123456"
 
-    invoice_tree = ET.ElementTree(invoice)
+    #invoice_tree = ET.ElementTree(invoice)
 
     xml_content = ET.tostring(invoice, encoding="utf-8", xml_declaration=True)
-    print(xml_content.decode("utf-8"))
+    return xml_content.decode("utf-8")
+
+def generate_invoice_html(invoice_xml):
+    root = ET.fromstring(invoice_xml)
+
+    table_style = """<style>
+        table {
+            max-width: 600px;
+            margin: 0 auto;
+            border-collapse: collapse;
+            border: 1px solid #ccc;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+    """
+
+    table_content = f"""
+    <table>
+    """
+
+    transactions = root.findall('.//transaction')
+    common_payment_method = root.find('.//payment_methods/method').text
+    common_bank_account = root.find('.//bank_account/number').text
+
+    for transaction in transactions:
+        description = transaction.find('description').text
+        unit_of_measure = transaction.find('unit_of_measure').text
+        quantity = transaction.find('quantity').text
+        unit_price = transaction.find('unit_price').text
+        net_value = transaction.find('net_value').text
+        tax_rate = transaction.find('tax_rate').text
+        tax_amount = transaction.find('tax_amount').text
+        gross_value = transaction.find('gross_value').text
+        payment_method = common_payment_method
+        account_number = common_bank_account
+
+        table_content += f"""
+        <tr>
+            <th>Nazwa</th>
+            <th>Wartość</th>
+        </tr>
+        <tr>
+            <td>Opis</td>
+            <td>{description}</td>
+        </tr>
+        <tr>
+            <td>Jednostka</td>
+            <td>{unit_of_measure}</td>
+        </tr>
+        <tr>
+            <td>Ilość</td>
+            <td>{quantity}</td>
+        </tr>
+        <tr>
+            <td>Cena jednostkowa</td>
+            <td>{unit_price}</td>
+        </tr>
+        <tr>
+            <td>Wartość netto</td>
+            <td>{net_value}</td>
+        </tr>
+        <tr>
+            <td>Stawka podatku</td>
+            <td>{tax_rate}</td>
+        </tr>
+        <tr>
+            <td>Kwota podatku</td>
+            <td>{tax_amount}</td>
+        </tr>
+        <tr>
+            <td>Wartość brutto</td>
+            <td>{gross_value}</td>
+        </tr>
+        <tr>
+            <td>Metoda płatności</td>
+            <td>{payment_method}</td>
+        </tr>
+        <tr>
+            <td>Numer konta</td>
+            <td>{account_number}</td>
+        </tr>
+        """
+
+    table_content += """
+    </table>
+    """
+
+    html_content = f"""<!DOCTYPE html>
+<html>
+<head>
+    <title>Faktura</title>
+    {table_style}
+</head>
+<body>
+    <h1>Faktura</h1>
+    {table_content}
+</body>
+</html>
+"""
+
+    return html_content
+
+
+
 

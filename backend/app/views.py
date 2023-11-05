@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from .authentication import ClientEmailAuthentication
 from .models import Package, Movie, Subscription, Client
 from .serializers import SubscriptionSerializer, PackageSerializer, MovieSerializer, ClientSerializer, UpdateSubscriptionSerializer
-from .utils.xml_utils import generate_invoice_xml
+from .utils.invoice_utils import generate_invoice_xml, generate_invoice_html
 
 
 @api_view(('GET',))
@@ -101,7 +101,10 @@ class SubscriptionViewSet(viewsets.ViewSet):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         subscription = serializer.save()
-        generate_invoice_xml(subscription)
+        invoice_xml = generate_invoice_xml(subscription)
+        print(invoice_xml)
+        invoice_html = generate_invoice_html(invoice_xml)
+        print(invoice_html)
         return Response(serializer.data, status.HTTP_201_CREATED)
 
     def partial_update(self, request, pk, *args, **kwargs):
