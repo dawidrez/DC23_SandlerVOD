@@ -7,12 +7,8 @@ from rest_framework.response import Response
 from .authentication import ClientEmailAuthentication
 from .models import Package, Movie, Subscription, Client
 from .serializers import SubscriptionSerializer, PackageSerializer, MovieSerializer, ClientSerializer, UpdateSubscriptionSerializer
-<<<<<<< HEAD
 from .utils.invoice_utils import generate_invoice_xml, generate_invoice_html
-=======
-from .utils.xml_utils import generate_invoice_xml
 from .utils.google.drive_utils import check_folder_exists, upload_file
->>>>>>> dev
 
 
 @api_view(('GET',))
