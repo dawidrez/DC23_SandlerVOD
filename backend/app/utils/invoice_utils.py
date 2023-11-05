@@ -1,4 +1,6 @@
+import os
 import xml.etree.ElementTree as ET
+import xml.dom.minidom
 from django.utils import timezone
 from datetime import timedelta
 from app.models import Subscription
@@ -85,10 +87,18 @@ def generate_invoice_xml(subscription):
     bank_account_number = ET.SubElement(bank_account, "number")
     bank_account_number.text = "12345678901234567890123456"
 
-    #invoice_tree = ET.ElementTree(invoice)
-
     xml_content = ET.tostring(invoice, encoding="utf-8", xml_declaration=True)
-    return xml_content.decode("utf-8")
+    formated_xml = xml.dom.minidom.parseString(xml_content).toprettyxml(indent="    ", encoding="utf-8")
+
+    if not os.path.exists("./temp"):
+        os.makedirs("./temp")
+
+    temp_xml_filename = f"./temp/invoice_{subscription.id}.xml"
+
+    with open(temp_xml_filename, "wb") as f:
+        f.write(formated_xml)
+
+    return xml_content.decode("utf-8"), temp_xml_filename
 
 def generate_invoice_html(invoice_xml):
     root = ET.fromstring(invoice_xml)
@@ -196,7 +206,4 @@ def generate_invoice_html(invoice_xml):
 """
 
     return html_content
-
-
-
 
