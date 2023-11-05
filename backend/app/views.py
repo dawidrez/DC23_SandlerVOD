@@ -8,6 +8,7 @@ from .authentication import ClientEmailAuthentication
 from .models import Package, Movie, Subscription, Client
 from .serializers import SubscriptionSerializer, PackageSerializer, MovieSerializer, ClientSerializer, UpdateSubscriptionSerializer
 from .utils.xml_utils import generate_invoice_xml
+from .utils.google.drive_utils import check_folder_exists, upload_file
 
 
 @api_view(('GET',))
@@ -101,7 +102,10 @@ class SubscriptionViewSet(viewsets.ViewSet):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         subscription = serializer.save()
-        generate_invoice_xml(subscription)
+
+        invoice_filename = generate_invoice_xml(subscription)
+        client_folder_id = check_folder_exists(subscription.client.email)
+        upload_file(invoice_filename, client_folder_id, clean_up=True)
         return Response(serializer.data, status.HTTP_201_CREATED)
 
     def partial_update(self, request, pk, *args, **kwargs):
