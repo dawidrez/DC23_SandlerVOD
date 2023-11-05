@@ -20,6 +20,10 @@ def generate_invoice_xml(subscription):
     start_date = subscription.start_date
     end_date = subscription.end_date
 
+    num_months = (end_date.year - start_date.year) * 12 + (end_date.month - start_date.month + 1)
+    total_cost = num_months * package.price
+
+
     # Tworzenie faktury
     invoice = ET.Element("invoice")
 
@@ -52,31 +56,37 @@ def generate_invoice_xml(subscription):
     transaction_description = ET.SubElement(transaction, "description")
     transaction_description.text = f"Subskrypcja pakietu {package.name}"
 
+    unit_of_measure = ET.SubElement(transaction, "start_date")
+    unit_of_measure.text = start_date.strftime("%Y-%m-%d")
+
+    unit_of_measure = ET.SubElement(transaction, "end_date")
+    unit_of_measure.text = end_date.strftime("%Y-%m-%d")
+
     unit_of_measure = ET.SubElement(transaction, "unit_of_measure")
-    unit_of_measure.text = "szt."
+    unit_of_measure.text = "miesiąc"
 
     quantity = ET.SubElement(transaction, "quantity")
-    quantity.text = "1"
+    quantity.text = str(num_months)
 
     unit_price = ET.SubElement(transaction, "unit_price")
     unit_price.text = str(package.price)
 
     net_value = ET.SubElement(transaction, "net_value")
-    net_value.text = str(package.price)
+    net_value.text = str(total_cost)
 
     tax_rate = ET.SubElement(transaction, "tax_rate")
     tax_rate.text = "23%"  # Przykładowa stawka podatku
 
     tax_amount = ET.SubElement(transaction, "tax_amount")
-    tax_amount.text = str(package.price * 0.23)
+    tax_amount.text = str(total_cost * 0.23)
 
     gross_value = ET.SubElement(transaction, "gross_value")
-    gross_value.text = str(package.price * 1.23)
+    gross_value.text = str(total_cost * 1.23)
 
     # Termin płatności
     payment_terms = ET.SubElement(invoice, "payment_terms")
     due_date = ET.SubElement(payment_terms, "due_date")
-    due_date.text = (timezone.now() + timedelta(days=30)).strftime("%Y-%m-%d")
+    due_date.text = (start_date + timedelta(days=30)).strftime("%Y-%m-%d")
 
     # Warunki płatności
     payment_methods = ET.SubElement(invoice, "payment_methods")
