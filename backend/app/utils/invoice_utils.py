@@ -110,13 +110,12 @@ def generate_invoice_xml(subscription):
 
     return xml_content.decode("utf-8"), temp_xml_filename
 
-def generate_invoice_html(invoice_xml):
+def generate_invoice_html(invoice_xml, client):
     root = ET.fromstring(invoice_xml)
 
     table_style = """<style>
         table {
             max-width: 600px;
-            margin: 0 auto;
             border-collapse: collapse;
             border: 1px solid #ccc;
         }
@@ -128,16 +127,67 @@ def generate_invoice_html(invoice_xml):
         th {
             background-color: #f2f2f2;
         }
+        .info-table {
+            width: 50%;
+            float: left;
+        }
     </style>
     """
 
-    table_content = f"""
-    <table>
+    pronoun = "Pani" if client.gender == "female" else "Panu"
+
+    thank_you_message = f"""
+    <div>
+        <p>Dziękujemy {pronoun} za zakup subskrypcji na naszej stronie, poniżej przesyłamy fakturę.</p>
+    </div>
+    """
+
+    info_tables = f"""
+    <div>
+        <table style="display: inline-block;">
+        <tr>
+            <th>Sprzedawca</th>
+        </tr>
+        <tr>
+            <td>Nazwa</td>
+            <td>Sandler VOD</td>
+        </tr>
+        <tr>
+            <td>Adres</td>
+            <td>Narutowicza 11/12</td>
+        </tr>
+        <tr>
+            <td>NIP</td>
+            <td>1231231231</td>
+        </tr>
+        </table>
+        <table style="display: inline-block;">
+        <tr>
+            <th>Nabywca</th>
+        </tr>
+        <tr>
+            <td>Imię</td>
+            <td>{client.first_name}</td>
+        </tr>
+        <tr>
+            <td>Nazwisko</td>
+            <td>{client.second_name}</td>
+        </tr>
+        <tr>
+            <td>Adres</td>
+            <td>{client.street_address}, {client.city}</td>
+        </tr>
+        </table>
+    </div>
     """
 
     transactions = root.findall('.//transaction')
     common_payment_method = root.find('.//payment_methods/method').text
     common_bank_account = root.find('.//bank_account/number').text
+
+    table_content = f"""
+    <table>
+    """
 
     for transaction in transactions:
         description = transaction.find('description').text
@@ -202,6 +252,13 @@ def generate_invoice_html(invoice_xml):
     </table>
     """
 
+    # Add an encouragement message at the end
+    encouragement_message = """
+    <div>
+        <p>Zachęcamy do zapoznania się z naszymi innymi dostępnymi pakietami.</p>
+    </div>
+    """
+
     html_content = f"""<!DOCTYPE html>
 <html>
 <head>
@@ -210,10 +267,14 @@ def generate_invoice_html(invoice_xml):
 </head>
 <body>
     <h1>Faktura</h1>
+    {thank_you_message}
+    {info_tables}
     {table_content}
+    {encouragement_message}
 </body>
 </html>
 """
 
     return html_content
+
 
