@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from .authentication import ClientEmailAuthentication
 from .models import Package, Movie, Subscription, Client
 from .serializers import SubscriptionSerializer, PackageSerializer, MovieSerializer, ClientSerializer, UpdateSubscriptionSerializer
-from .utils.invoice_utils import generate_invoice_xml, generate_invoice_html
+from .utils.invoice_utils import generate_invoice_xml, generate_invoice_html, generate_invoice_pdf
 from .utils.google.drive_utils import check_folder_exists, upload_file
 
 
@@ -104,7 +104,7 @@ class SubscriptionViewSet(viewsets.ViewSet):
         subscription = serializer.save()
         invoice_xml, invoice_filename = generate_invoice_xml(subscription)
         invoice_html = generate_invoice_html(invoice_xml, subscription.client)
-
+        generate_invoice_pdf(invoice_xml)
         print(invoice_xml)
         print(invoice_html)
         
