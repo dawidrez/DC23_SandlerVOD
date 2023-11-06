@@ -3,6 +3,8 @@ export enum Views {
     LOGIN = "login",
     REGISTER = "register",
     PACKAGES = "packages",
+    SUBSCRIPTIONS = "subscriptions",
+    USERS = "users",
     ARCHIVE = "archive",
     INSTOCK = 'instock',
 }

@@ -14,6 +14,12 @@
       <p-button *ngIf="isUserLoggedIn()" (onClick)="openByView([views.PACKAGES, 'me'])"
         [label]="'commons.my-packages' | translate" styleClass="p-button-text">
       </p-button>
+      <p-button *ngIf="isUserLoggedIn() && isAdmin()" (onClick)="openByView([views.SUBSCRIPTIONS])"
+        [label]="'commons.subscriptions' | translate" styleClass="p-button-text">
+      </p-button>
+      <p-button *ngIf="isUserLoggedIn() && isAdmin()" (onClick)="openByView([views.USERS])"
+        [label]="'commons.users' | translate" styleClass="p-button-text">
+      </p-button>
       <!-- <p-button *ngIf="isUserHasAdminRole()" (onClick)="openByView([views.ARCHIVE])"
         [label]="'commons.archive' | translate" styleClass="p-button-text">
       </p-button> -->

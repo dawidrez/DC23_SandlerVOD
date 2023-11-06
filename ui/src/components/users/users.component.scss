@@ -6,9 +6,9 @@ a {
   text-decoration: none;
 }
 
-*:not(.p-input-filled),
-*::before:not(.p-input-filled),
-*::after:not(.p-input-filled) {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -73,13 +73,6 @@ a {
 
 .h3 {
   font-size: var(--fs-4);
-}
-
-.user-data-bar {
-  border: 0px solid transparent;
-  border-radius: 20px;
-  padding: 23px;
-  background: linear-gradient(to right, var(--app-bg-color), rgba(0, 0, 0, 0.8));
 }
 
 .btn {
@@ -321,37 +314,37 @@ a {
   font-family: var(--ff-nunito);
 }
 
-// .input-wrapper {
-//   padding: 15px 20px;
-//   max-width: initial;
-//   overflow: auto;
-// }
+.input-wrapper {
+  padding: 15px 20px;
+  max-width: initial;
+  overflow: auto;
+}
 
-// .input-wrapper:not(:last-of-type) {
-//   border-bottom: 1px solid hsla(0, 0%, 0%, 0.08);
-// }
+.input-wrapper:not(:last-of-type) {
+  border-bottom: 1px solid hsla(0, 0%, 0%, 0.08);
+}
 
-// .input-label {
-//   color: var(--manatee);
-//   font-size: var(--fs-6);
-//   margin-bottom: 10px;
-// }
+.input-label {
+  color: var(--manatee);
+  font-size: var(--fs-6);
+  margin-bottom: 10px;
+}
 
-// .input-field {
-//   color: var(--space-cadet);
-//   outline: 2px solid transparent;
-//   outline-offset: 5px;
-//   border-radius: 4px;
-//   transition: var(--transition);
-// }
+.input-field {
+  color: var(--space-cadet);
+  outline: 2px solid transparent;
+  outline-offset: 5px;
+  border-radius: 4px;
+  transition: var(--transition);
+}
 
-// .input-field:focus {
-//   outline-color: var(--carolina-blue);
-// }
+.input-field:focus {
+  outline-color: var(--carolina-blue);
+}
 
-// .input-field::placeholder {
-//   color: var(--text-color-secondary);
-// }
+.input-field::placeholder {
+  color: var(--text-color-secondary);
+}
 
 .hero-form .btn {
   --width: calc(100% - 40px);
@@ -399,26 +392,26 @@ a {
     grid-template-columns: 1fr 1fr 1fr 0.8fr;
   }
 
-  // .input-wrapper:not(:last-of-type) {
-  //   border-bottom: none;
-  //   border-right: 1px solid hsla(100, 100%, 100%, 0.08);
-  // }
+  .input-wrapper:not(:last-of-type) {
+    border-bottom: none;
+    border-right: 1px solid hsla(100, 100%, 100%, 0.08);
+  }
 
-  // .input-wrapper {
-  //   font-size: 12px;
-  //   // max-width: 240px;
-  //   overflow: hidden;
-  // }
+  .input-wrapper {
+    font-size: 12px;
+    // max-width: 240px;
+    overflow: hidden;
+  }
 
-  // .input-label {
-  //   white-space: nowrap;
-  //   overflow: hidden;
-  //   text-overflow: ellipsis;
-  // }
+  .input-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
   .hero-banner {
     display: block;
-    background: url("/assets/img/banner.jpg") no-repeat;
+    background: url("/assets/img/users_banner.gif") no-repeat;
     background-size: cover;
     background-position: left;
     position: absolute;
@@ -436,9 +429,9 @@ a {
     width: 100%;
   }
 
-  // .input-wrapper {
-  //   font-size: 14px;
-  // }
+  .input-wrapper {
+    font-size: 14px;
+  }
 
 }
 
@@ -474,9 +467,9 @@ a {
     text-transform: uppercase;
   }
 
-  // .input-wrapper {
-  //   font-size: 16px;
-  // }
+  .input-wrapper {
+    font-size: 16px;
+  }
 }
 
 
@@ -485,5 +478,21 @@ a {
     .p-grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
+  }
+}
+
+::ng-deep {
+  .subscriptions-table {
+    tr {
+      td {
+        cursor: pointer;
+      }
+    }
+
+    // overflow: scroll;
+  }
+
+  .p-datatable-wrapper {
+    overflow: visible !important;
   }
 }

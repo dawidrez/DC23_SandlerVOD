@@ -1,0 +1,15 @@
+<div class="p-input-filled p-float-label"
+  [class.p-required]="dateControl && dateControl.hasValidator(validators.required)">
+  <p-calendar [formControl]="localControl" selectionMode="single" placeholder="{{'ㅤ'}}" styleClass="full-width"
+    [inputId]="inputId" [touchUI]="screenDetectorObject.isMobile" [readonlyInput]="readonlyInput" [minDate]="min"
+    [maxDate]="max" [appendTo]="document.body" [showClear]="showClear" dateFormat="dd/mm/yy">
+  </p-calendar>
+  <label for="{{inputId}}">{{ label | translate }}</label>
+</div>
+<small class="control-invalid" *ngIf="(dateControl && dateControl.dirty && dateControl.errors !== null) ||
+        (dateControl && dateControl.dirty && dateControl.errors !== null)">
+  <span *ngIf="!dateControl.hasError('required') && dateControl.hasError('required')"
+    [style.position]="absoluteError ? 'absolute' : ''">
+    {{ 'commons.validation.date-required' | translate }}
+  </span>
+</small>

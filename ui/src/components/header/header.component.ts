@@ -68,6 +68,10 @@ export class HeaderComponent {
     return this.authService.isLoggedIn();
   }
 
+  isAdmin() {
+    return this.authService.isAdmin();
+  }
+
   logout() {
     this.authService.clean();
     this.router.navigate([Views.LOGIN]);

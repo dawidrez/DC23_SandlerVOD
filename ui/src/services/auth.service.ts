@@ -84,6 +84,10 @@ export class AuthService {
         return false;
     }
 
+    isAdmin(): boolean {
+        return true;
+    }
+
     clean(): void {
         if (isPlatformBrowser(this.platformId)) {
             window.localStorage.clear();

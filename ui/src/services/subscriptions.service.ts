@@ -9,16 +9,24 @@ export class SubscriptionsService {
     private readonly baseUrl = "/api/subscriptions";
     constructor(private dataSourceService: DataSourceService) { }
 
-    getAllUserPackages(): Observable<any> {
-        return this.dataSourceService.getWithUserEmailInHeaderParam(`${this.baseUrl}`);
+    getAllUserSubscriptions(email: string | undefined = undefined): Observable<any> {
+        return this.dataSourceService.getWithUserEmailInHeaderParam(`${this.baseUrl}`, email);
     }
 
     // get(id: string): Observable<any> {
     //     return this.dataSourceService.get(`${this.baseUrl}/${id}`);
     // }
 
+    getAll(): Observable<any> {
+        return this.dataSourceService.getWithUserEmailInHeaderParam(`${this.baseUrl}`);
+    }
+
     subscribeOnPackage(params: any) {
         return this.dataSourceService.postWithUserEmailInHeaderParam(`${this.baseUrl}/`, params);
+    }
+
+    updateSubscription(subscriptionId: any, params: any) {
+        return this.dataSourceService.patchWithUserEmailInHeaderParam(`${this.baseUrl}/${subscriptionId}/`, params);
     }
 
     // get(id: string): Observable<any> {

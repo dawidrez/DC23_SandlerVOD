@@ -23,15 +23,19 @@ import * as moment from 'moment';
 import { UtilsService } from 'src/services/utils.service';
 
 @Component({
-    selector: 'app-package-preview.',
+    selector: 'app-package-preview',
     templateUrl: './package-preview.component.html',
     styleUrls: ['./package-preview.component.scss'],
 })
 export class PackagePreviewComponent implements OnInit, OnDestroy {
     @ViewChild('packagesContainer') packagesContainer!: any;
     packageId = this.route.snapshot.paramMap.get('packageId') || '';
+    subscriptionId = this.route.snapshot.paramMap.get('subscriptionId') || '';
     packageObject: any;
-    userPackages: any;
+    userSubscriptions: any;
+    packages: any;
+    users: any;
+    subscriptionItem: any;
     packageMovies: any;
     filterForm: FormGroup = new FormGroup({
         searchPhrase: new FormControl(null),
@@ -46,6 +50,7 @@ export class PackagePreviewComponent implements OnInit, OnDestroy {
     screenDetectorObject: ScreenDetector = this.screenDetectorService.getScreenDetectorObject();
     subscriptions: Subscription[] = [];
     layout: "list" | "grid" = 'grid';
+    updatingSubscription = false;
 
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
@@ -65,11 +70,20 @@ export class PackagePreviewComponent implements OnInit, OnDestroy {
         private urlSerializer: UrlSerializer,
         private clipboard: Clipboard,
         private utilsService: UtilsService,) {
+        // if(this.subscriptionId){
+        //     this.subscriptionForm.addControl('new', new FormControl('', Validators.required));
+        // }
     }
 
     ngOnInit() {
-        this.getPackage();
-        this.getAllUserSubscriptions();
+        console.log(this.subscriptionId);
+        if (!this.subscriptionId) {
+            this.getPackage();
+            this.getAllUserSubscriptions();
+        }
+        else {
+            this.getDataForExistingSubscription();
+        }
     }
 
 
@@ -93,10 +107,85 @@ export class PackagePreviewComponent implements OnInit, OnDestroy {
                 else {
                     this.packageObject = packageObject;
                     if (Array.isArray(this.packageObject.movies)) {
-                        this.getAllMoviesByIds(this.packageObject.movies)
+                        this.getAllMoviesByIds(this.packageObject.movies);
                     }
                 }
 
+            },
+            (error: any) => {
+                console.log(error);
+            }
+        );
+    }
+
+    getDataForExistingSubscription() {
+        this.getAllPackages();
+    }
+
+    getAllPackages() {
+        this.packagesService.getAll().subscribe(
+            (packages: any) => {
+                console.log(packages);
+                this.packages = packages || [];
+                if (this.packages.length) {
+                    this.getAllUsers();
+                }
+            },
+            (error: any) => {
+                console.log(error);
+            }
+        );
+    }
+
+    getAllUsers() {
+        this.userService.getAll().subscribe(
+            (users: any) => {
+                console.log("users: " + users);
+                this.users = users || [];
+                if (this.users.length) {
+                    this.getUserSubscriptionAndSetFetchedData();
+                }
+            },
+            (error: any) => {
+                console.log(error);
+            }
+        );
+    }
+
+
+    getUserSubscriptionAndSetFetchedData() {
+        this.subscriptionsService.getAll().subscribe(
+            (subscriptions: any) => {
+                subscriptions ||= [];
+                const filteredItem = subscriptions.filter((subscription: any) => Number(subscription.id) === Number(this.subscriptionId))?.map((subscription: any) => {
+                    subscription.start_date = moment(subscription.start_date, this.utilsService.BACKEND_DATE_FORMAT).toDate();
+                    subscription.end_date = moment(subscription.end_date, this.utilsService.BACKEND_DATE_FORMAT).toDate();
+                    const subscriptionPackage = this.packages.find((packageItem: any) => Number(subscription.package) === Number(packageItem.id));
+                    const subscriptionUser = this.users.find((user: any) => Number(subscription.client) === Number(user.id));
+                    if (subscriptionPackage) {
+                        subscriptionPackage.moviesNumber = subscriptionPackage.movies?.length || 0;
+                    }
+                    if (subscriptionUser) {
+                        subscriptionUser.fullName = subscriptionUser.first_name + ' ' + subscriptionUser.second_name;
+                    }
+                    const now = moment();
+                    subscription.active = now.isBetween(subscription.start_date, subscription.end_date, null, '[]');
+                    subscription.packageObject = subscriptionPackage;
+                    subscription.userObject = subscriptionUser;
+
+                    return subscription;
+                });
+                if (filteredItem?.length) {
+                    this.subscriptionItem = filteredItem[0];
+                    this.packageObject = this.subscriptionItem.packageObject;
+                    this.subscriptionForm.controls['start_date'].setValue(this.subscriptionItem.start_date);
+                    this.subscriptionForm.controls['end_date'].setValue(this.subscriptionItem.end_date);
+                    this.subscriptionForm.controls['package'].setValue(this.subscriptionItem.packageObject?.id);
+                    this.userSubscriptions = [this.subscriptionItem];
+                    if (Array.isArray(this.packageObject.movies)) {
+                        this.getAllMoviesByIds(this.packageObject.movies);
+                    }
+                }
             },
             (error: any) => {
                 console.log(error);
@@ -165,15 +254,33 @@ export class PackagePreviewComponent implements OnInit, OnDestroy {
         }
     }
 
+    updateSubscription() {
+        if (this.subscriptionForm.valid) {
+            this.updatingSubscription = true;
+            const model = this.subscriptionForm.getRawValue();
+            delete model.start_date;
+            delete model.package;
+            this.subscriptionsService.updateSubscription(this.subscriptionId, model).subscribe(
+                (response: any) => {
+                    this.updatingSubscription = false;
+                },
+                (error: any) => {
+                    this.updatingSubscription = false;
+                    console.log(error);
+                }
+            );
+        }
+    }
+
     getAllUserSubscriptions() {
-        this.subscriptionsService.getAllUserPackages().subscribe(
-            (userPackages: any) => {
-                this.userPackages = userPackages;
+        this.subscriptionsService.getAllUserSubscriptions().subscribe(
+            (userSubscriptions: any) => {
+                this.userSubscriptions = userSubscriptions;
                 // start_date: new FormControl(null, Validators.required),
                 //     end_date: new FormControl(null, Validators.required),
                 //         package: new FormControl(this.packageId, Validators.required),
                 if (this.isPackageAlreadyUserPackage()) {
-                    const subscription = this.userPackages.find((userPackage: any) => userPackage.package === Number(this.packageId));
+                    const subscription = this.userSubscriptions.find((userPackage: any) => userPackage.package === Number(this.packageId));
                     this.subscriptionForm.controls['start_date'].setValue(moment(subscription.start_date, this.utilsService.BACKEND_DATE_FORMAT).toDate());
                     this.subscriptionForm.controls['end_date'].setValue(moment(subscription.end_date, this.utilsService.BACKEND_DATE_FORMAT).toDate());
                     // subscription && this.subscriptionForm.patchValue(subscription);
@@ -186,7 +293,7 @@ export class PackagePreviewComponent implements OnInit, OnDestroy {
     }
 
     isPackageAlreadyUserPackage() {
-        return Array.isArray(this.userPackages) && !!this.userPackages.find((userPackage: any) => userPackage.package === Number(this.packageId));
+        return !this.subscriptionId && Array.isArray(this.userSubscriptions) && !!this.userSubscriptions.find((userPackage: any) => userPackage.package === Number(this.packageId));
     }
 }
 
