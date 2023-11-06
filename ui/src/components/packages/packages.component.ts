@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, OnDestroy, OnInit, SecurityContext, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, Renderer2, SecurityContext, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSerializer } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -24,22 +24,34 @@ import { UtilsService } from 'src/services/utils.service';
     templateUrl: './packages.component.html',
     styleUrls: ['./packages.component.scss']
 })
-export class PackagesComponent implements OnInit, OnDestroy {
+export class PackagesComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('packagesContainer') packagesContainer!: any;
     showUserPackages: string | undefined = this.route.snapshot.paramMap.get('userPackages') || undefined;
+    userId: string | undefined = this.route.snapshot.paramMap.get('userId') || undefined;
     sortOrder!: number;
     sortField!: string;
     // sortOptions: any[];
     packages!: any[];
-    userPackages: any;
+    userSubscriptions: any;
     filteredPackages!: any[];
     layout: "list" | "grid" = 'grid';
 
-    // carsLine = [
-    //     { name: 'H-Line', value: 1 },
-    //     { name: 'P-Line', value: 2 },
-    //     { name: 'D-Line', value: 3 },
-    // ];
+    // User change variables
+    userObject: any;
+    userEditForm: FormGroup = new FormGroup({
+        first_name: new FormControl(null, Validators.required),
+        second_name: new FormControl(null, Validators.required),
+        email: new FormControl(null, [Validators.required, Validators.email]),
+        street_address: new FormControl(null, Validators.required),
+        city: new FormControl(null, Validators.required),
+        gender: new FormControl(null, Validators.required),
+    });
+    genderOptions = [
+        { name: 'Male', value: "male" },
+        { name: 'Female', value: "female" },
+        { name: 'Other', value: "other" },
+    ];
+    // User change variables
 
     filterForm: FormGroup = new FormGroup({
         searchPhrase: new FormControl(null),
@@ -66,34 +78,58 @@ export class PackagesComponent implements OnInit, OnDestroy {
         private packagesService: PackagesService,
         private screenDetectorService: ScreenDetectorService,
         private subscriptionsService: SubscriptionsService,
-        private utilsService: UtilsService,) {
+        private utilsService: UtilsService,
+        private el: ElementRef, private renderer: Renderer2) {
         this.screenDetectorObject = this.screenDetectorService.getScreenDetectorObject();
     }
     ngOnDestroy(): void {
         this.subscriptions.forEach(s => s.unsubscribe());
     }
 
+    ngAfterViewInit() {
+        if (this.showUserPackages) {
+            this.changeBackgroundImage();
+        }
+    }
     ngOnInit() {
-        console.log("userPackages: ", this.showUserPackages);
+        console.log("userSubscriptions: ", this.showUserPackages);
         if (isPlatformBrowser(this.platformId)) {
-            this.getAllUserSubscriptions();
+            if (this.userId) {
+                this.getUserDataById();
+            }
+            else {
+                this.getAllUserSubscriptions();
+            }
         }
     }
 
-    // consoleLog(data: any) {
-    //     console.log(data);
-    // }
+    getUserDataById() {
+        this.userService.getAll().subscribe(
+            (users: any) => {
+                console.log("users: ", users);
+                this.userObject = users.find((user: any) => Number(user.id) === Number(this.userId));
+                this.userEditForm.patchValue(this.userObject);
+                console.log(this.userObject);
+                if (this.userObject) {
+                    this.getAllUserSubscriptions(this.userObject.email);
+                }
+            },
+            (error: any) => {
+                console.log(error);
+            }
+        );
+    }
 
     getAllPackages() {
         this.packagesService.getAll().subscribe((packages: any) => {
             console.log(packages);
             this.packages = packages;
-            if (!this.showUserPackages) {
+            if (!this.showUserPackages && !this.userId) {
                 this.filteredPackages = [...this.packages];
             }
             else {
                 this.filteredPackages = this.packages.filter(packageItem => {
-                    return this.userPackages.some((userPackage: any) => userPackage.package === packageItem.id);
+                    return this.userSubscriptions.some((userPackage: any) => userPackage.package === packageItem.id);
                 });
             }
 
@@ -102,10 +138,10 @@ export class PackagesComponent implements OnInit, OnDestroy {
     }
 
 
-    getAllUserSubscriptions() {
-        this.subscriptionsService.getAllUserPackages().subscribe(
-            (userPackages: any) => {
-                this.userPackages = userPackages.map((subscription: any) => {
+    getAllUserSubscriptions(email: string | undefined = undefined) {
+        this.subscriptionsService.getAllUserSubscriptions(email).subscribe(
+            (userSubscriptions: any) => {
+                this.userSubscriptions = userSubscriptions.map((subscription: any) => {
                     subscription.start_date = moment(subscription.start_date, this.utilsService.BACKEND_DATE_FORMAT).toDate();
                     subscription.end_date = moment(subscription.end_date, this.utilsService.BACKEND_DATE_FORMAT).toDate();
                     return subscription;
@@ -119,7 +155,7 @@ export class PackagesComponent implements OnInit, OnDestroy {
     }
 
     getSubscriptionIfPackageAlreadyUserPackage(packageId: any) {
-        return Array.isArray(this.userPackages) && this.userPackages.find((userPackage: any) => userPackage.package === Number(packageId));
+        return Array.isArray(this.userSubscriptions) && this.userSubscriptions.find((userPackage: any) => userPackage.package === Number(packageId));
     }
 
     onPageEvent(event: any) {
@@ -163,4 +199,64 @@ export class PackagesComponent implements OnInit, OnDestroy {
             }
         }
     }
+
+    changeBackgroundImage() {
+        const heroBanner = this.el.nativeElement.querySelector('.hero-banner');
+        console.log(heroBanner);
+        if (heroBanner) {
+            this.renderer.setStyle(
+                heroBanner,
+                'background',
+                'url("/assets/img/my_subscriptions_banner.jpg") no-repeat'
+            );
+            this.renderer.setStyle(heroBanner, 'background-size', 'cover');
+            this.renderer.setStyle(heroBanner, 'background-position', 'left');
+        }
+    }
+
+    getTitle() {
+        if (this.showUserPackages) {
+            return 'SANDLER VOD';
+        }
+        else if (this.userId) {
+            return this.userObject ? this.userObject?.first_name + ' ' + this.userObject?.second_name : '--- ---';
+        }
+        return this.translate.instant('commons.my-packages');
+    }
+
+    getSubtitle() {
+        if (this.showUserPackages) {
+            return 'When I take my kid to school, all the parents stop and stare.';
+        }
+        else if (this.userId) {
+            return '';
+        }
+        return this.translate.instant('commons.home-subtitle');
+    }
+
+    updateUserData() {
+        if (this.userEditForm.valid && this.userId) {
+            this.loading = true;
+            this.userService.updateUser(this.userId, this.userEditForm.getRawValue()).subscribe(
+                (response: any) => {
+                    this.loading = false;
+                },
+                (error: any) => {
+                    this.loading = false;
+                    console.log(error);
+                }
+            );
+        }
+    }
+
+    getSubscriptionPreview(packageId: any) {
+        const subscriptionId = this.userSubscriptions.find((subscription: any) => subscription.package === packageId)?.id;
+        if (subscriptionId) {
+            return ['/' + Views.SUBSCRIPTIONS, subscriptionId];
+        }
+        else {
+            return ['/' + Views.PACKAGES, this.userId];
+        }
+    }
+
 }

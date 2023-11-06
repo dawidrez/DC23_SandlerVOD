@@ -47,7 +47,16 @@
       "date-from-required": "Date from required",
       "date-to-required": "Date to required",
       "date-range-required": "Date range required"
-    }
+    },
+    "subscriptions": "Subscriptions",
+    "users": "Clients",
+    "package-name": "Package Name",
+    "user": "User",
+    "price": "Price",
+    "movies": "Movies",
+    "start-date": "Start Date",
+    "end-date": "End Date",
+    "active": "Active"
   },
 
   "car": {

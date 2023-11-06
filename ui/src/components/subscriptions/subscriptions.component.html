@@ -1,0 +1,109 @@
+<app-header [headerZIndex]="21"></app-header>
+
+<section class="section hero" id="home" [style.padding-top.px]="screenDetectorObject.isMobile ? 20 : 0">
+  <div class="featured-cars">
+
+    <div class="hero-content">
+      <h2 class="h1 hero-title">{{ "commons.subscriptions" | translate}}</h2>
+
+      <p class="hero-text">
+        Through my films I'm eventually trying to one day tell the truth.<br> I don't know if I'm ever going to get
+        there,
+        but I'm slowly letting pieces of myself out there and then maybe by the time I'm 85,<br> I'll look back and say,
+        'All right, that about sums it up.'
+      </p>
+    </div>
+
+    <div class="hero-banner"></div>
+  </div>
+</section>
+
+<div class="card p-5">
+  <p-table #dt2 [value]="subscriptionItems" dataKey="id" [rows]="10" [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 25, 50]" [loading]="loading" [paginator]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [globalFilterFields]="['packageObject.name', 'userObject.fullName', 'userObject.gender', 'userObject.city', 'userObject.street_address', 'userObject.email']"
+    responsiveLayout="scroll" styleClass="subscriptions-table" selectionMode="single"
+    (onRowSelect)="openSubscriptionPreview($event)">
+    <ng-template pTemplate="caption">
+      <div class="flex p-input-filled">
+        <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="dt2.clear()"
+          style="height: 40px;width: 100px;"></button>
+        <span class="p-inputtext p-input-icon-left ml-auto">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" (input)="dt2.filterGlobal(getEventValue($event), 'contains')"
+            placeholder="Search keyword" style="height: 40px;" />
+        </span>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width:20%">{{ 'commons.package-name' | translate}}</th>
+        <th style="width:20%">{{ 'commons.user' | translate}}</th>
+        <th style="width:10%">{{ 'commons.price' | translate}}</th>
+        <th style="width:10%">{{ 'commons.movies' | translate}}</th>
+        <th style="width:15%">{{ 'commons.start-date' | translate}}</th>
+        <th style="width:15%">{{ 'commons.end-date' | translate}}</th>
+        <th style="width:10%">{{ 'commons.active' | translate}}</th>
+      </tr>
+      <tr>
+        <th>
+          <p-columnFilter type="text" field="packageObject.name"></p-columnFilter>
+        </th>
+        <th>
+          <p-columnFilter type="text" field="userObject.fullName"></p-columnFilter>
+        </th>
+        <th>
+          <p-columnFilter type="text" field="packageObject.price"></p-columnFilter>
+        </th>
+        <th>
+          <p-columnFilter type="text" field="packageObject.moviesNumber"></p-columnFilter>
+        </th>
+        <th>
+          <p-columnFilter type="date" field="packageObject.start_date"></p-columnFilter>
+        </th>
+        <th>
+          <p-columnFilter type="date" field="packageObject.end_date"></p-columnFilter>
+        </th>
+        <th>
+          <div class="flex align-items-center justify-content-center" style="margin-left: 2.6rem !important;">
+            <p-columnFilter type="boolean" field="active"></p-columnFilter>
+          </div>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-subscription>
+      <tr [pSelectableRow]="subscription">
+        <td>
+          {{ subscription.packageObject?.name || '---' }}
+        </td>
+        <td>
+          {{ subscription.userObject?.fullName || '---' }}
+        </td>
+        <td>
+          {{ subscription.packageObject?.price ? (subscription.packageObject?.price + ' zł') : '---' }}
+        </td>
+        <td>
+          {{ subscription.packageObject?.moviesNumber || 0 }}
+        </td>
+        <td>
+          {{ subscription.start_date | date: 'dd/MM/yyyy' }}
+        </td>
+        <td>
+          {{ subscription.end_date | date: 'dd/MM/yyyy' }}
+        </td>
+        <td>
+          <div class="flex align-items-center justify-content-center">
+            <i class="pi" [ngClass]="{ 'text-center text-green-500 pi-check-circle': subscription.active,
+                               'text-center text-red-500 pi-times-circle': !subscription.active }"></i>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="7">No subscritpions found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

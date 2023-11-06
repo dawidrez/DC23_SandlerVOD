@@ -9,20 +9,34 @@
             (onClick)="routerBack()"></p-button>
           <div>
             <div class="p-card-title">{{ packageObject.name }}</div>
-            <div class="p-card-subtitle">{{ packageObject.price + ' zł' }}</div>
+            <div class="p-card-subtitle">
+              {{subscriptionId ? (subscriptionItem?.userObject?.fullName + ' - ' +(packageObject.price + ' zł')) : packageObject.price + ' zł' }}
+            </div>
           </div>
         </div>
         <div class="flex justify-content-end align-items-center">
-          <app-date-range-select *ngIf="!isPackageAlreadyUserPackage()" label="commons.subscription-date"
-            [dateFromControl]="$any(subscriptionForm).controls['start_date']"
+          <!-- Simple use -->
+          <app-date-range-select *ngIf="!subscriptionId && !isPackageAlreadyUserPackage()"
+            label="commons.subscription-date" [dateFromControl]="$any(subscriptionForm).controls['start_date']"
             [dateToControl]="$any(subscriptionForm).controls['end_date']" [inputId]="'created-date-select'"
             [useBackendDateFormat]="true" [convertBackendDatesFormatOnInit]="true" [min]="today">
           </app-date-range-select>
-          <span
-            *ngIf="isPackageAlreadyUserPackage()">{{ (subscriptionForm.controls['start_date'].value | date: 'dd/MM/yyyy')+ ' - ' + (subscriptionForm.controls['end_date'].value | date: 'dd/MM/yyyy') }}</span>
-          <p-button *ngIf="!isPackageAlreadyUserPackage()" icon="bi bi-plus-circle"
+          <p-button *ngIf="!subscriptionId && !isPackageAlreadyUserPackage()" icon="bi bi-plus-circle"
             styleClass="p-button-rounded p-button-text custom-btn-size" (onClick)="addPackage()"
             [disabled]="subscriptionForm.invalid"></p-button>
+
+          <!-- Update use -->
+          <span class="mr-2"
+            *ngIf="subscriptionId">{{ (subscriptionForm.controls['start_date'].value | date: 'dd/MM/yyyy')+ ' - '}}</span>
+          <app-date-select *ngIf="subscriptionId" label="commons.end-date"
+            [dateControl]="$any(subscriptionForm).controls['end_date']" [inputId]="'end-date-select'"
+            [useBackendDateFormat]="true" [convertBackendDatesFormatOnInit]="true" [min]="today">
+          </app-date-select>
+          <p-button *ngIf="subscriptionId" label="Save" styleClass="p-button-outlined ml-2"
+            [disabled]="subscriptionForm.invalid" (onClick)="updateSubscription()" [loading]="updatingSubscription">
+          </p-button>
+          <span
+            *ngIf="isPackageAlreadyUserPackage()">{{ (subscriptionForm.controls['start_date'].value | date: 'dd/MM/yyyy')+ ' - ' + (subscriptionForm.controls['end_date'].value | date: 'dd/MM/yyyy') }}</span>
           <i *ngIf="isPackageAlreadyUserPackage()" class="bi bi-check-circle-fill ml-4"
             style="color:var(--green-400);font-size: 25px"></i>
         </div>

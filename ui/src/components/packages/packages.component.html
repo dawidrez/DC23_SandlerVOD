@@ -1,70 +1,121 @@
 <app-header [headerZIndex]="21"></app-header>
 
 <section class="section hero" id="home" [style.padding-top.px]="screenDetectorObject.isMobile ? 20 : 0">
-    <div class="featured-cars">
+  <div class="featured-cars">
 
-        <div class="hero-content">
-            <h2 class="h1 hero-title">{{!showUserPackages ? "SANDLER VOD" : "commons.my-packages" | translate}}</h2>
-
-            <p class="hero-text">
-                {{ 'commons.home-subtitle' | translate }}
-            </p>
-        </div>
-
-        <div class="hero-banner"></div>
+    <div class="hero-content">
+      <div class="gap-4" *ngIf="userId">
+        <h2 class="h1 hero-title">{{ getTitle() }}</h2>
+        <form [formGroup]="userEditForm" class="row user-data-bar">
+          <div class="col-md-8">
+            <div class="row flex">
+              <div class="col-3 pr-3 py-2">
+                <div class="p-input-filled">
+                  <input pInputText formControlName="first_name" class="w-full"
+                    placeholder="{{ ('commons.firstName' | translate) + ' *'}}" />
+                </div>
+              </div>
+              <div class="col-3 pr-3 py-2">
+                <div class="p-input-filled">
+                  <input pInputText formControlName="second_name" class="w-full"
+                    placeholder="{{ ('commons.lastName' | translate) + ' *'}}" />
+                </div>
+              </div>
+              <div class="col-3 pr-3 py-2">
+                <div class="p-input-filled">
+                  <input pInputText formControlName="email" class="w-full"
+                    placeholder="{{ ('commons.email' | translate) + ' *'}}" />
+                </div>
+              </div>
+              <div class="col-3 pr-3 py-2">
+                <div class="p-input-filled">
+                  <input pInputText formControlName="street_address" class="w-full"
+                    placeholder="{{ ('commons.street' | translate) + ' *'}}" />
+                </div>
+              </div>
+              <div class="col-3 pr-3 py-2">
+                <div class="p-input-filled">
+                  <input pInputText formControlName="city" class="w-full"
+                    placeholder="{{ ('commons.city' | translate) + ' *'}}" />
+                </div>
+              </div>
+              <div class="col-3 pr-3 py-2">
+                <div class="p-input-filled">
+                  <p-dropdown styleClass="w-full" [options]="genderOptions" formControlName="gender" optionLabel="name"
+                    optionValue="value" [appendTo]="document.body" [showClear]="true"
+                    placeholder="{{'commons.gender' | translate}}"></p-dropdown>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 flex justify-content-center align-items-center">
+            <!-- <div class="col-3 flex justify-content-left align-items-center"> -->
+            <p-button [label]="'commons.save' | translate" [loading]="loading" (onClick)="updateUserData()">
+            </p-button>
+            <!-- </div> -->
+          </div>
+        </form>
+      </div>
+      <h2 class="h1 hero-title" *ngIf="!userId">{{ getTitle() }}</h2>
+      <p class="hero-text">
+        {{ getSubtitle() }}
+      </p>
     </div>
+
+    <div class="hero-banner"></div>
+  </div>
 </section>
 
 
 <!-- <p-card> -->
 <div #packagesContainer>
-    <p-dataView [value]="filteredPackages" [layout]="layout" [paginator]="true" (onPage)="onPageEvent($event)"
-        [rows]="32" [first]="32 * (filterForm.controls['page'].value || 0)" styleClass="featured-cars">
-        <ng-template let-package pTemplate="gridItem">
-            <div class="featured-package-card relative">
-                <div class="card-content">
+  <p-dataView [value]="filteredPackages" [layout]="layout" [paginator]="true" (onPage)="onPageEvent($event)" [rows]="32"
+    [first]="32 * (filterForm.controls['page'].value || 0)" styleClass="featured-cars">
+    <ng-template let-package pTemplate="gridItem">
+      <div class="featured-package-card relative">
+        <div class="card-content">
 
-                    <div class="card-title-wrapper">
-                        <h3 class="h3 card-title">
-                            <a [routerLink]="['/packages/preview', package.id]">{{package.name}}</a>
-                        </h3>
-                        <data class="year" value="0">{{package.price + ' zł'}}</data>
-                    </div>
-                    <a [routerLink]="['/packages/preview', package.id]">
-                        <ul class="card-list">
-                            <li class="card-list-item">
-                                <i class="bi bi-film"></i>
-                                <span class="card-item-text">{{package.movies?.length || '---'}}</span>
-                            </li>
-                            <li *ngIf="getSubscriptionIfPackageAlreadyUserPackage(package.id)" class="card-list-item">
-                                <i class="bi bi-check-circle-fill" style="color:var(--green-400);font-size: 25px"></i>
-                                <span
-                                    class="card-item-text">{{(getSubscriptionIfPackageAlreadyUserPackage(package.id)?.start_date | date: 'dd/MM/yyyy')+ ' - ' + (getSubscriptionIfPackageAlreadyUserPackage(package.id)?.end_date | date: 'dd/MM/yyyy')}}</span>
-                            </li>
-                            <li *ngIf="!getSubscriptionIfPackageAlreadyUserPackage(package.id)" class="card-list-item">
-                                <i class="bi bi-x-circle-fill" style="color:var(--red-400);font-size: 25px"></i>
-                                <span class="card-item-text">{{'commons.no-subscription' | translate}}</span>
-                            </li>
-                        </ul>
-                    </a>
-                    <div class="card-price-wrapper">
+          <div class="card-title-wrapper">
+            <h3 class="h3 card-title">
+              <a
+                [routerLink]="userId ? getSubscriptionPreview(package.id) : ['/packages/preview', package.id]">{{package.name}}</a>
+            </h3>
+            <data class="year" value="0">{{package.price + ' zł'}}</data>
+          </div>
+          <a [routerLink]="userId ? getSubscriptionPreview(package.id) :['/packages/preview', package.id]">
+            <ul class="card-list">
+              <li class="card-list-item">
+                <i class="bi bi-film"></i>
+                <span class="card-item-text">{{package.movies?.length || '---'}}</span>
+              </li>
+              <li *ngIf="getSubscriptionIfPackageAlreadyUserPackage(package.id)" class="card-list-item">
+                <i class="bi bi-check-circle-fill" style="color:var(--green-400);font-size: 25px"></i>
+                <span
+                  class="card-item-text">{{(getSubscriptionIfPackageAlreadyUserPackage(package.id)?.start_date | date: 'dd/MM/yyyy')+ ' - ' + (getSubscriptionIfPackageAlreadyUserPackage(package.id)?.end_date | date: 'dd/MM/yyyy')}}</span>
+              </li>
+              <li *ngIf="!getSubscriptionIfPackageAlreadyUserPackage(package.id)" class="card-list-item">
+                <i class="bi bi-x-circle-fill" style="color:var(--red-400);font-size: 25px"></i>
+                <span class="card-item-text">{{'commons.no-subscription' | translate}}</span>
+              </li>
+            </ul>
+          </a>
+          <div class="card-price-wrapper">
 
-                        <p-button icon="bi bi-link-45deg" [pTooltip]="'commons.copy-link' | translate"
-                            tooltipPosition="bottom" (onClick)="copyPackageLink(package.id)"
-                            styleClass="p-button-rounded p-button-text p-button-sm">
-                        </p-button>
-                        <!-- 
+            <p-button icon="bi bi-link-45deg" [pTooltip]="'commons.copy-link' | translate" tooltipPosition="bottom"
+              (onClick)="copyPackageLink(package.id)" styleClass="p-button-rounded p-button-text p-button-sm">
+            </p-button>
+            <!-- 
                         <p-button *ngIf="isUserHasAdminRole()" icon="pi pi-trash"
                             [pTooltip]="'commons.delete' | translate" tooltipPosition="bottom"
                             (onClick)="removeCar($event, car.id)" [loading]="car.loadingDelete"
                             styleClass="p-button-rounded p-button-text p-button-sm p-button-danger">
                         </p-button> -->
 
-                    </div>
+          </div>
 
-                </div>
-            </div>
-        </ng-template>
-    </p-dataView>
-    <!-- </p-card> -->
+        </div>
+      </div>
+    </ng-template>
+  </p-dataView>
+  <!-- </p-card> -->
 </div>

@@ -17,6 +17,7 @@ import { InplaceModule } from 'primeng/inplace';
 import { GALLERY_CONFIG, GalleryConfig } from 'ng-gallery';
 import { LIGHTBOX_CONFIG, LightboxConfig, LightboxModule } from 'ng-gallery/lightbox';
 import { HammerModule } from "../../node_modules/@angular/platform-browser";
+import { TableModule } from 'primeng/table';
 
 import { AuthComponent } from 'src/components/auth/auth.component';
 import { HeaderComponent } from 'src/components/header/header.component';
@@ -24,12 +25,16 @@ import { FooterComponent } from 'src/components/footer/footer.component';
 import { QuillModule } from 'ngx-quill';
 import { PackagesComponent } from 'src/components/packages/packages.component';
 import { PackagePreviewComponent } from 'src/components/packages/package-preview/package-preview.component';
+import { SubscriptionsComponent } from 'src/components/subscriptions/subscriptions.component';
+import { UsersComponent } from 'src/components/users/users.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         AuthComponent,
         PackagesComponent,
+        SubscriptionsComponent,
+        UsersComponent,
         PackagePreviewComponent,
         HeaderComponent,
         FooterComponent,
@@ -70,6 +75,7 @@ import { PackagePreviewComponent } from 'src/components/packages/package-preview
         }),
         ReactiveFormsModule,
         FormsModule,
+        TableModule,
         PanelModule,
         InplaceModule
     ],

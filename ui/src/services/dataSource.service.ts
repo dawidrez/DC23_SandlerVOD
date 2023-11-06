@@ -25,9 +25,12 @@ export class DataSourceService {
         return this.http.get(`${this.hostUrl}${restMapping}`, { params: data });
     }
 
-    getWithUserEmailInHeaderParam(restMapping: string): Observable<object> {
-        const userEmail = window.localStorage.getItem(this.localStorageUser) || '';
-        const headers = new HttpHeaders().set('X-EMAIL', JSON.parse(userEmail));
+    getWithUserEmailInHeaderParam(restMapping: string, email: string | undefined = undefined): Observable<object> {
+        let userEmail = '';
+        if (!email) {
+            userEmail = window.localStorage.getItem(this.localStorageUser) || '';
+        }
+        const headers = new HttpHeaders().set('X-EMAIL', email ? email : JSON.parse(userEmail));
         return this.http.get(`${this.hostUrl}${restMapping}`, {
             headers: headers,
             responseType: "json",
@@ -49,6 +52,16 @@ export class DataSourceService {
         const userEmail = window.localStorage.getItem(this.localStorageUser) || '';
         const headers = new HttpHeaders().set('X-EMAIL', JSON.parse(userEmail));
         return this.http.post(`${this.hostUrl}${restMapping}`, data, {
+            headers: headers,
+            responseType: "json",
+        });
+    }
+
+    patchWithUserEmailInHeaderParam(restMapping: string, data: any): Observable<any> {
+        // const requestParams = this.prepareRequestParams(data, httpParam);
+        const userEmail = window.localStorage.getItem(this.localStorageUser) || '';
+        const headers = new HttpHeaders().set('X-EMAIL', JSON.parse(userEmail));
+        return this.http.patch(`${this.hostUrl}${restMapping}`, data, {
             headers: headers,
             responseType: "json",
         });

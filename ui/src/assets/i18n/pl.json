@@ -47,7 +47,16 @@
       "date-from-required": "Wymagana data od",
       "date-to-required": "Wymagana data do",
       "date-range-required": "Wymagany zakres dat"
-    }
+    },
+    "subscriptions": "Subskrypcje",
+    "users": "Klienci",
+    "package-name": "Nazwa Pakietu",
+    "user": "Użytkownik",
+    "price": "Cena",
+    "movies": "Filmy",
+    "start-date": "Data Rozpoczęcia",
+    "end-date": "Data Zakończenia",
+    "active": "Aktywny"
   },
 
   "car": {
