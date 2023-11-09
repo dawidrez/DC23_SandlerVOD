@@ -10,7 +10,7 @@ def send_custom_emails():
     # 1. Wysyłanie powiadomień o kończących się subskrypcjach
     upcoming_end_date = date.today() + timedelta(days=7)
     expiring_subscriptions = Subscription.objects.filter(
-        end_date=upcoming_end_date)
+        end_date__lt=upcoming_end_date)
     for subscription in expiring_subscriptions:
         client = subscription.client
         package = subscription.package
@@ -40,7 +40,7 @@ def send_custom_emails():
     #        message = f'Cześć {client.first_name},\n\nJesteś dla nas ważnym klientem! Dlatego przygotowaliśmy dla Ciebie specjalną ofertę zniżkową na kolejne pakiety. Skontaktuj się z nami, aby dowiedzieć się więcej!\n\nPozdrawiamy,\nZespół SandlerVOD'
     #        send_email(subject, message, (client.email, ))
 #
-    # 4. Sugestia nowego pakietu dla klienta
+     #4. Sugestia nowego pakietu dla klienta
     for client in Client.objects.all():
         new_package = Package.objects.exclude(
             subscription__client=client).first()
