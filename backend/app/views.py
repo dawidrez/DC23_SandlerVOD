@@ -1,3 +1,4 @@
+import threading
 from rest_framework import status, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.generics import get_object_or_404
@@ -109,7 +110,10 @@ class SubscriptionViewSet(viewsets.ViewSet):
         print(invoice_html)
         
         client_folder_id = check_folder_exists(subscription.client.email)
-        upload_file(invoice_filename, client_folder_id, clean_up=True)
+
+        upload_thread = threading.Thread(target=upload_file, args=(invoice_filename, client_folder_id), kwargs={"clean_up": True})
+        upload_thread.start()
+
         return Response(serializer.data, status.HTTP_201_CREATED)
 
     def partial_update(self, request, pk, *args, **kwargs):
@@ -119,7 +123,17 @@ class SubscriptionViewSet(viewsets.ViewSet):
             return Response({"detail": "This action is forbidden"}, status.HTTP_403_FORBIDDEN)
         serializer = UpdateSubscriptionSerializer(subscription, data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        updated_subscription = serializer.save()
+
+        invoice_xml, invoice_filename = generate_invoice_xml(updated_subscription)
+        invoice_html = generate_invoice_html(invoice_xml, updated_subscription.client)
+        generate_invoice_pdf(invoice_xml)
+
+        client_folder_id = check_folder_exists(updated_subscription.client.email)
+
+        upload_thread = threading.Thread(target=upload_file, args=(invoice_filename, client_folder_id), kwargs={"clean_up": True})
+        upload_thread.start()
+
         return Response(serializer.data, status.HTTP_200_OK)
 
 
