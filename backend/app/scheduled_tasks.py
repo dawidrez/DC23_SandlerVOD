@@ -1,12 +1,11 @@
 from datetime import date, timedelta
 
-from app.models import GenderTypes
 from app.utils.email_utils import send_email
 
 
 
 def send_custom_emails():
-    from .models import Subscription, Client, Package, Movie
+    from .models import Subscription, Client, Package, GenderTypes
 
     # 1. Wysyłanie powiadomień o kończących się subskrypcjach
     upcoming_end_date = date.today() + timedelta(days=7)
