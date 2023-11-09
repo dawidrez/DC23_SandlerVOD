@@ -1,5 +1,5 @@
 from rest_framework import status, viewsets
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -55,6 +55,13 @@ class ClientViewsSet(viewsets.ViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status.HTTP_200_OK)
+
+    @action(detail=False, methods=['GET'])
+    def is_admin(self, request, *args, **kwargs):
+        user = request.user
+        if user.is_superuser:
+            return Response({"is_admin": True}, status=status.HTTP_200_OK)
+        return Response({"is_admin": False}, status=status.HTTP_200_OK)
 
 
 class PackageViewSet(viewsets.ViewSet):
