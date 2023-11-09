@@ -80,6 +80,29 @@ def check_file_exists(file_name, folder_id=PARENT_FOLDER_ID):
     return False
 
 
+def rename_file(service, file_id, new_name):
+    """Rename file in Google Drive
+    Args:
+        service: Google Drive service instance
+        file_id (str): id of file to rename
+        new_name (str): new name of file
+    Returns:
+        bool: True if file renamed else False
+    """
+
+    try:
+        file = {'name': new_name}
+        service.files().update(
+            fileId=file_id,
+            body=file,
+            fields='name'
+        ).execute()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+
 def upload_file(file_path, folder_id=PARENT_FOLDER_ID, clean_up=False):
     """Upload file to Google Drive
     Args:
@@ -91,14 +114,17 @@ def upload_file(file_path, folder_id=PARENT_FOLDER_ID, clean_up=False):
     creds = authenticate()
     service = build('drive', 'v3', credentials=creds)
 
-    file_exist = check_file_exists(file_path.split('/')[-1], folder_id)
+    file_name = file_path.split('/')[-1]
+
+    file_exist = check_file_exists(file_name, folder_id)
 
     if file_exist:
-        print(f"File {file_path.split('/')[-1]} already exists in Google Drive")
-        return False
+        print(f"File {file_path.split('/')[-1]} already exists in Google Drive, changing file to old")
+        file_name_old = file_name.split('.')[0] + '_old.' + file_name.split('.')[1]
+        rename_file(service, file_exist, file_name_old)
 
     file_metadata = {
-        'name': file_path.split('/')[-1],
+        'name': file_name,
         'parents': [folder_id]
     }
 
