@@ -6,9 +6,9 @@ a {
   text-decoration: none;
 }
 
-*:not(.p-input-filled),
-*::before:not(.p-input-filled),
-*::after:not(.p-input-filled) {
+*:not(.p-input-filled):not(.featured-cars):not(.p-inputtext),
+*:not(.p-input-filled):not(.featured-cars):not(.p-inputtext)::before,
+*:not(.p-input-filled):not(.featured-cars):not(.p-inputtext)::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -78,7 +78,7 @@ a {
 .user-data-bar {
   border: 0px solid transparent;
   border-radius: 20px;
-  padding: 23px;
+  padding: 23px !important;
   background: linear-gradient(to right, var(--app-bg-color), rgba(0, 0, 0, 0.8));
 }
 
@@ -88,7 +88,7 @@ a {
   color: var(--primary-color-text);
   min-width: var(--width, 40px);
   min-height: var(--height, 40px);
-  padding: 5px;
+  padding: 5px !important;
   display: grid;
   place-items: center;
   border-radius: var(--radius-14);
@@ -119,7 +119,7 @@ a {
 ::ng-deep .featured-cars {
   max-width: 95%;
   // margin-inline: auto;
-  padding-inline: 15px;
+  padding-inline: 15px !important;
   color: var(--text-color-secondary);
   font-family: var(--ff-open-sans);
 
@@ -143,7 +143,7 @@ a {
     background: var(--gradient);
     // border: 1px solid var(--white);
     border-radius: var(--radius-18);
-    padding: 10px;
+    padding: 10px !important;
     box-shadow: var(--shadow-1);
 
     &:hover {
@@ -171,7 +171,7 @@ a {
   }
 
   .featured-package-card .card-content {
-    padding: 20px 10px 10px;
+    padding: 20px 10px 10px !important;
   }
 
   .featured-package-card .card-title-wrapper {
@@ -202,7 +202,7 @@ a {
     font-family: var(--ff-nunito);
     font-size: var(--fs-6);
     font-weight: var(--fw-600);
-    padding: 3px 12px;
+    padding: 3px 12px !important;
     border: 2px dashed hsla(233, 45%, 74%, 0.4);
     border-radius: var(--radius-14);
     color: var(--text-color-secondary);
@@ -212,7 +212,7 @@ a {
     display: grid;
     grid-template-columns: 1fr;
     gap: 15px;
-    padding-bottom: 15px;
+    padding-bottom: 15px !important;
     border-bottom: 1px solid hsla(100, 100%, 100%, 0.1);
     margin-bottom: 15px;
   }
@@ -294,12 +294,12 @@ a {
 \*-----------------------------------*/
 
 .hero {
-  padding-top: 120px;
+  padding-top: 120px !important;
   overflow: hidden;
 }
 
 .hero-title {
-  max-width: 20ch;
+  max-width: 30ch;
   margin-bottom: 15px;
 }
 
@@ -360,6 +360,25 @@ a {
   text-transform: uppercase;
 }
 
+::ng-deep .save-button-container {
+  p-button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    button {
+      width: 50%;
+    }
+  }
+}
+
+::ng-deep .custom-back-button {
+  .p-button-icon::before {
+    font-weight: bolder !important;
+    font-size: 32px !important;
+  }
+}
 
 
 @media (min-width: 350px) {
@@ -370,7 +389,7 @@ a {
 
     .featured-package-card .btn:last-child {
       min-width: max-content;
-      padding-inline: 15px;
+      padding-inline: 15px !important;
     }
   }
 }
@@ -429,6 +448,10 @@ a {
     border-radius: 30px;
     z-index: -1;
   }
+}
+
+.no-top-padding {
+  padding-top: 0 !important;
 }
 
 @media (min-width: 992px) {

@@ -1,7 +1,7 @@
 <header class="header" [style.z-index]="headerZIndex">
   <div class="flex justify-content-between align-items-center w-full gap-1">
-    <div class="flex align-items-center justify-content-start gap-0"
-      [class.small-font-size]="screenDetectorObject.isMobile" [class.gap-1]="!screenDetectorObject.isMobile">
+    <div class="flex flex-wrap align-items-center justify-content-start gap-2"
+      [class.small-font-size]="screenDetectorObject.isMobile">
       <div class="flex align-items-center justify-content-start">
         <img class="logo_img" src="../../assets/img/lable.jpg" style="width: 40px"
           *ngIf="!screenDetectorObject.isMobile">

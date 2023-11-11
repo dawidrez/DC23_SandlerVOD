@@ -1,23 +1,21 @@
 import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, Renderer2, SecurityContext, ViewChild } from '@angular/core';
-import { ActivatedRoute, Params, Router, UrlSerializer } from '@angular/router';
+import { ActivatedRoute, Router, UrlSerializer } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Views } from 'src/enums/Views.enum';
-import { filter } from 'rxjs/operators';
 import { UserService } from 'src/services/user.service';
-import { UserRole } from 'src/enums/UserRole.enum';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { DOCUMENT, isPlatformBrowser, isPlatformServer } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { GalleryItemTypes } from 'ng-gallery';
 import { Subscription } from 'rxjs';
 import { PackagesService } from 'src/services/packages.service';
 import { ScreenDetector, ScreenDetectorService } from 'src/services/screenDetector.service';
 import { SubscriptionsService } from 'src/services/subscriptions.service';
 import * as moment from 'moment';
 import { UtilsService } from 'src/services/utils.service';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-packages',
@@ -79,7 +77,8 @@ export class PackagesComponent implements OnInit, OnDestroy, AfterViewInit {
         private screenDetectorService: ScreenDetectorService,
         private subscriptionsService: SubscriptionsService,
         private utilsService: UtilsService,
-        private el: ElementRef, private renderer: Renderer2) {
+        private el: ElementRef, private renderer: Renderer2,
+        private _location: Location,) {
         this.screenDetectorObject = this.screenDetectorService.getScreenDetectorObject();
     }
     ngOnDestroy(): void {
@@ -215,17 +214,17 @@ export class PackagesComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     getTitle() {
-        if (this.showUserPackages) {
+        if (!this.showUserPackages && !this.userId) {
             return 'SANDLER VOD';
         }
         else if (this.userId) {
-            return this.userObject ? this.userObject?.first_name + ' ' + this.userObject?.second_name : '--- ---';
+            return this.userObject ? 'Client: ' + this.userObject?.first_name + ' ' + this.userObject?.second_name : '--- ---';
         }
         return this.translate.instant('commons.my-packages');
     }
 
     getSubtitle() {
-        if (this.showUserPackages) {
+        if (!this.showUserPackages && !this.userId) {
             return 'When I take my kid to school, all the parents stop and stare.';
         }
         else if (this.userId) {
@@ -257,6 +256,10 @@ export class PackagesComponent implements OnInit, OnDestroy, AfterViewInit {
         else {
             return ['/' + Views.PACKAGES, this.userId];
         }
+    }
+
+    routerBack() {
+        this._location.back();
     }
 
 }

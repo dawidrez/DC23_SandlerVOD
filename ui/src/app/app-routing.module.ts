@@ -16,10 +16,10 @@ const routes: Routes = [
   { path: Views.PACKAGES + '/preview/:packageId', component: PackagePreviewComponent },
   { path: Views.PACKAGES + '/:userPackages', component: PackagesComponent },
   { path: Views.PACKAGES, component: PackagesComponent },
-  { path: Views.SUBSCRIPTIONS, component: SubscriptionsComponent },
-  { path: Views.SUBSCRIPTIONS + '/:subscriptionId', component: PackagePreviewComponent },
-  { path: Views.USERS, component: UsersComponent },
-  { path: Views.USERS + '/:userId', component: PackagesComponent },
+  { path: Views.SUBSCRIPTIONS, component: SubscriptionsComponent, canActivate: [RouteGuard], data: { role: UserRole.ADMIN } },
+  { path: Views.SUBSCRIPTIONS + '/:subscriptionId', component: PackagePreviewComponent, canActivate: [RouteGuard], data: { role: UserRole.ADMIN } },
+  { path: Views.USERS, component: UsersComponent, canActivate: [RouteGuard], data: { role: UserRole.ADMIN } },
+  { path: Views.USERS + '/:userId', component: PackagesComponent, canActivate: [RouteGuard], data: { role: UserRole.ADMIN } },
   { path: Views.ANY, redirectTo: Views.LOGIN },
 ];
 

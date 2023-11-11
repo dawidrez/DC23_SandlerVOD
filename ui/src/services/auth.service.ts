@@ -1,5 +1,5 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, map, of, tap } from 'rxjs';
 import { DataSourceService } from './dataSource.service';
 import { HttpClient } from '@angular/common/http';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
@@ -9,39 +9,30 @@ import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 })
 export class AuthService {
 
-    private readonly baseUrl = "/api/clients/";
+    private readonly baseUrl = "/api/clients";
     private readonly localStorageUser = "AUTH_USER";
+    private isAdminUser = false;
+    private isAdminRequest: Observable<boolean> | undefined;
     // private readonly localStorageUsers = "USERS";
 
     constructor(private dataSourceService: DataSourceService, private http: HttpClient,
         @Inject(PLATFORM_ID) private platformId: Object,) { }
 
     login(params: any): Observable<any> {
-        //only email
-        // const data = window.localStorage.getItem(this.localStorageUser);
         this.saveUser(params.email);
-        // const user = JSON.parse(data);
-        // if (!user) {
-        //     this.saveUser(params.email);
-        // }
-
         console.log('login true');
-        // return this.dataSourceService.post(`${this.baseUrl}`, params);
         return of(this.getAuthenticatedUserData());
     }
 
     register(params: any): Observable<any> {
-        // const data = window.localStorage.getItem(this.localStorageUsers);
         console.log('register data: ', params);
-        // if (data && Array.isArray(JSON.parse(data))) {
-        //     const users = JSON.parse(data);
-        //     return this.addNewUser(users, params);
-        // }
-        // else {
-        //     const users = [params];
-        //     return this.addNewUser(users, params, true);
-        // }
-        return this.dataSourceService.post(`${this.baseUrl}`, params);
+        // isAdmin
+        return this.dataSourceService.post(`${this.baseUrl}/`, params).pipe(
+            tap((response: any) => {
+                if (response) {
+                    this.getIfUserIsAdmin().subscribe();
+                }
+            }));
     }
 
     // addNewUser(users: any, params: any, forceAdd = false) {
@@ -68,6 +59,7 @@ export class AuthService {
         if (isPlatformBrowser(this.platformId)) {
             const user = window.localStorage.getItem(this.localStorageUser);
             if (user) {
+                this.getIfUserIsAdmin().subscribe();
                 return JSON.parse(user);
             }
         }
@@ -84,8 +76,21 @@ export class AuthService {
         return false;
     }
 
+    getIfUserIsAdmin() {
+        if (!this.isAdminRequest) {
+            this.isAdminRequest = this.dataSourceService.getWithUserEmailInHeaderParam(`${this.baseUrl}/is_admin`).pipe(
+                tap((response: any) => {
+                    this.isAdminUser = !!response?.is_admin;
+                }),
+                map((data: any) => {
+                    return !!data?.is_admin;
+                }));
+        }
+        return this.isAdminRequest;
+    }
+
     isAdmin(): boolean {
-        return true;
+        return this.isAdminUser;
     }
 
     clean(): void {

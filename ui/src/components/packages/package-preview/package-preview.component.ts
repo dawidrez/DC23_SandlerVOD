@@ -1,20 +1,16 @@
-import { Component, ElementRef, Inject, OnDestroy, OnInit, PLATFORM_ID, Sanitizer, SecurityContext, ViewChild } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, UrlSerializer } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
-import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-// import { CarService } from 'src/services/car.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { DOCUMENT } from '@angular/common';
-import { Galleria } from 'primeng/galleria';
 import { Location } from '@angular/common';
-import { Views } from 'src/enums/Views.enum';
-import { UserRole } from 'src/enums/UserRole.enum';
 import { UserService } from 'src/services/user.service';
-import { DomSanitizer, Meta } from '@angular/platform-browser';
+import { Meta } from '@angular/platform-browser';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { ScreenDetectorService, ScreenDetector } from "src/services/screenDetector.service";
-import { Gallery, GalleryItem, GalleryItemTypes, GalleryRef, GalleryState } from 'ng-gallery';
-import { Observable, Subscription, forkJoin, of } from 'rxjs';
+import { Gallery, } from 'ng-gallery';
+import { Subscription, forkJoin } from 'rxjs';
 import { PackagesService } from 'src/services/packages.service';
 import { MoviesService } from 'src/services/movies.service';
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -51,6 +47,7 @@ export class PackagePreviewComponent implements OnInit, OnDestroy {
     subscriptions: Subscription[] = [];
     layout: "list" | "grid" = 'grid';
     updatingSubscription = false;
+    subscribing = false;
 
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
@@ -243,12 +240,15 @@ export class PackagePreviewComponent implements OnInit, OnDestroy {
 
     addPackage() {
         if (this.subscriptionForm.valid) {
+            this.subscribing = true;
             this.subscriptionsService.subscribeOnPackage(this.subscriptionForm.getRawValue()).subscribe(
                 (response: any) => {
                     this.getAllUserSubscriptions();
+                    this.subscribing = false;
                 },
                 (error: any) => {
                     console.log(error);
+                    this.subscribing = false;
                 }
             );
         }
