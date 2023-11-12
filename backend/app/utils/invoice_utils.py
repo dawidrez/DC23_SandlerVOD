@@ -9,6 +9,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from PIL import Image
 
 
 def calculate_price(package, start_date, end_date):
@@ -279,9 +280,18 @@ def generate_invoice_pdf(invoice_xml, dir):
     c.setFont("Times-Roman", 12)
     c.drawRightString(width * 0.9, 28, "Data wystawienia: " + root.find(".//invoice_date").text)
 
+    # Logo
+    img = Image.open(os.path.join("logo", "LOGO.png"))
+    img = img.transpose(Image.FLIP_TOP_BOTTOM)  # Flip the image vertically
+    img_path = os.path.join(dir, "flipped_logo.png")
+    img.save(img_path)
+
+    # Draw the flipped logo
+    c.drawImage(img_path, width*0.1, -130, width=130, preserveAspectRatio=True)  # Use positive height
+
     # Numer faktury
     c.setFont("Times-Bold", 20)
-    c.drawString(width*0.1, 100, "Faktura nr: " + root.find(".//invoice_number").text)
+    c.drawString(width*0.6, 100, "Faktura nr: " + root.find(".//invoice_number").text)
 
     c.setFillColorRGB(0, 0, 0)
 
