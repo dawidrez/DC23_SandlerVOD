@@ -265,10 +265,10 @@ def generate_invoice_html(invoice_xml, client):
     return html_content
 
 
-def generate_invoice_pdf(invoice_xml):
+def generate_invoice_pdf(invoice_xml, dir):
     root = ET.fromstring(invoice_xml)
 
-    c = canvas.Canvas("Invoice.pdf", pagesize=A4, bottomup=0)
+    c = canvas.Canvas(os.path.join(dir, "invoice.pdf"), pagesize=A4, bottomup=0)
 
     width = A4[0]
     height = A4[1]
@@ -383,3 +383,5 @@ def generate_invoice_pdf(invoice_xml):
 
     c.showPage()
     c.save()
+
+    return os.path.join(dir, "invoice.pdf")
