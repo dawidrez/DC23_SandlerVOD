@@ -74,7 +74,7 @@ def generate_invoice_xml(subscription):
     unit_price.text = str(package.price)
 
     net_value = ET.SubElement(transaction, "net_value")
-    net_value.text = str(total_cost)
+    net_value.text = str(int(total_cost))
 
     tax_rate = ET.SubElement(transaction, "tax_rate")
     tax_rate.text = "23%"  # Przykładowa stawka podatku
@@ -83,7 +83,7 @@ def generate_invoice_xml(subscription):
     tax_amount.text = str(total_cost * 0.23)
 
     gross_value = ET.SubElement(transaction, "gross_value")
-    gross_value.text = str(total_cost * 1.23)
+    gross_value.text = str(int(total_cost * 1.23))
 
     # Termin płatności
     payment_terms = ET.SubElement(invoice, "payment_terms")
@@ -116,70 +116,70 @@ def generate_invoice_html(invoice_xml, client):
     root = ET.fromstring(invoice_xml)
 
     table_style = """<style>
-        table {
-            max-width: 600px;
-            border-collapse: collapse;
-            border: 1px solid #ccc;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .info-table {
-            width: 50%;
-            float: left;
-        }
+            body {
+                font-family: 'Arial', sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f5f5f5;
+            }
+    
+            h1 {
+                color: #333;
+            }
+    
+            p {
+                color: #666;
+            }
+    
+            table {
+                max-width: 30%;
+                border-collapse: collapse;
+                margin: 20px 0;
+                color: black;
+                height: 100%;
+                background-color: #80868B;
+                border: 1px solid #ccc;
+                
+            }
+    
+            th,
+            td {
+                border: 1px solid #ccc;
+                padding: 10px;
+                text-align: left;
+            }
+    
+            th {
+                background-color: #1E2F97;
+                color: white;
+            }
+    
+            .parent-container {
+                text-align: center;
+                color: white;
+            }
+            
+            .info-table {
+                width: 50%;
+                float: left;
+                margin-bottom: 20px;
+            }
+    
+            .invoice-image {
+                margin-left: 20px;
+                margin-bottom: 20px;
+                display: inline-block;
+                width: 28%;
+                height: 240px;
+            }
     </style>
     """
 
     pronoun = "Pani" if client.gender == "female" else "Panu"
 
     thank_you_message = f"""
-    <div>
-        <p>Dziękujemy {pronoun} za zakup subskrypcji na naszej stronie, poniżej przesyłamy fakturę.</p>
-    </div>
-    """
-
-    info_tables = f"""
-    <div>
-        <table style="display: inline-block;">
-        <tr>
-            <th>Sprzedawca</th>
-        </tr>
-        <tr>
-            <td>Nazwa</td>
-            <td>Sandler VOD</td>
-        </tr>
-        <tr>
-            <td>Adres</td>
-            <td>Narutowicza 11/12</td>
-        </tr>
-        <tr>
-            <td>NIP</td>
-            <td>1231231231</td>
-        </tr>
-        </table>
-        <table style="display: inline-block;">
-        <tr>
-            <th>Nabywca</th>
-        </tr>
-        <tr>
-            <td>Imię</td>
-            <td>{client.first_name}</td>
-        </tr>
-        <tr>
-            <td>Nazwisko</td>
-            <td>{client.second_name}</td>
-        </tr>
-        <tr>
-            <td>Adres</td>
-            <td>{client.street_address}, {client.city}</td>
-        </tr>
-        </table>
+    <div class="parent-container">
+        Dziękujemy {pronoun} za zakup subskrypcji na naszej stronie, poniżej przesyłamy fakturę.
     </div>
     """
 
@@ -188,7 +188,8 @@ def generate_invoice_html(invoice_xml, client):
     common_bank_account = root.find('.//bank_account/number').text
 
     table_content = f"""
-    <table>
+    <div class="parent-container">
+    <table style="display: inline-block;">
     """
 
     for transaction in transactions:
@@ -213,28 +214,8 @@ def generate_invoice_html(invoice_xml, client):
             <td>{description}</td>
         </tr>
         <tr>
-            <td>Jednostka</td>
-            <td>{unit_of_measure}</td>
-        </tr>
-        <tr>
-            <td>Ilość</td>
-            <td>{quantity}</td>
-        </tr>
-        <tr>
-            <td>Cena jednostkowa</td>
-            <td>{unit_price}</td>
-        </tr>
-        <tr>
             <td>Wartość netto</td>
             <td>{net_value}</td>
-        </tr>
-        <tr>
-            <td>Stawka podatku</td>
-            <td>{tax_rate}</td>
-        </tr>
-        <tr>
-            <td>Kwota podatku</td>
-            <td>{tax_amount}</td>
         </tr>
         <tr>
             <td>Wartość brutto</td>
@@ -251,13 +232,15 @@ def generate_invoice_html(invoice_xml, client):
         """
 
     table_content += """
-    </table>
+        </table>	
+        <img src="https://filmozercy.com/uploads/images/original/adam-sandler-w-filmie-nieoszlifowane-diamenty-dla-netflix.jpeg" alt="Invoice Image" class="invoice-image">
+        </div>
     """
 
     # Add an encouragement message at the end
     encouragement_message = """
-    <div>
-        <p>Zachęcamy do zapoznania się z naszymi innymi dostępnymi pakietami.</p>
+    <div class="parent-container">
+        Zachęcamy do zapoznania się z naszymi innymi dostępnymi pakietami.
     </div>
     """
 
@@ -267,10 +250,9 @@ def generate_invoice_html(invoice_xml, client):
     <title>Faktura</title>
     {table_style}
 </head>
-<body>
-    <h1>Faktura</h1>
+<body style="background: url('https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA1L3B4MTU4NDgwMy1pbWFnZS1rd3Z4dmxjai5qcGc.jpg') center/cover no-repeat fixed;">
+    <h1 class="parent-container">Dziękujemy za zakupy!</h1>
     {thank_you_message}
-    {info_tables}
     {table_content}
     {encouragement_message}
 </body>
