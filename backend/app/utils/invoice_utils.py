@@ -7,6 +7,10 @@ from app.models import Subscription
 import random
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from PIL import Image
+
 
 def calculate_price(package, start_date, end_date):
     # Obliczenie liczby rozpoczętych miesięcy subskrypcji
@@ -262,21 +266,32 @@ def generate_invoice_html(invoice_xml, client):
     return html_content
 
 
-def generate_invoice_pdf(invoice_xml):
+def generate_invoice_pdf(invoice_xml, dir):
     root = ET.fromstring(invoice_xml)
 
-    c = canvas.Canvas("Invoice.pdf", pagesize=A4, bottomup=0)
+    c = canvas.Canvas(os.path.join(dir, "invoice.pdf"), pagesize=A4, bottomup=0)
 
     width = A4[0]
     height = A4[1]
+
+    pdfmetrics.registerFont(TTFont('Times-Roman', 'Times.ttf'))
 
     # Data wystawienia
     c.setFont("Times-Roman", 12)
     c.drawRightString(width * 0.9, 28, "Data wystawienia: " + root.find(".//invoice_date").text)
 
+    # Logo
+    img = Image.open(os.path.join("logo", "LOGO.png"))
+    img = img.transpose(Image.FLIP_TOP_BOTTOM)  # Flip the image vertically
+    img_path = os.path.join(dir, "flipped_logo.png")
+    img.save(img_path)
+
+    # Draw the flipped logo
+    c.drawImage(img_path, width*0.1, -130, width=130, preserveAspectRatio=True)  # Use positive height
+
     # Numer faktury
     c.setFont("Times-Bold", 20)
-    c.drawString(width*0.1, 100, "Faktura nr: " + root.find(".//invoice_number").text)
+    c.drawString(width*0.6, 100, "Faktura nr: " + root.find(".//invoice_number").text)
 
     c.setFillColorRGB(0, 0, 0)
 
@@ -309,65 +324,65 @@ def generate_invoice_pdf(invoice_xml):
     c.line(offset_x_table, offset_y_table+height_table*0.5, offset_x_table+width_table, offset_y_table+height_table*0.5)
 
     c.setFont("Times-Roman", 9)
-    c.drawCentredString(offset_x_table + width_table*0.03, offset_y_table + height_table*0.32, "lp.")
-    c.line(offset_x_table + width_table*0.06, offset_y_table, offset_x_table + width_table*0.06, offset_y_table+height_table)
-    c.setFont("Times-Roman", 7)
-    c.drawRightString(offset_x_table + width_table * 0.057, offset_y_table + height_table * 0.73, "1.")
+    c.drawCentredString(offset_x_table + width_table*0.015, offset_y_table + height_table*0.32, "lp.")
+    c.line(offset_x_table + width_table*0.03, offset_y_table, offset_x_table + width_table*0.03, offset_y_table+height_table)
+    c.setFont("Times-Roman", 10)
+    c.drawRightString(offset_x_table + width_table * 0.027, offset_y_table + height_table * 0.8, "1.")
 
     c.setFont("Times-Roman", 9)
-    c.drawCentredString(offset_x_table + width_table * 0.19, offset_y_table + height_table * 0.32, "Usługa")
+    c.drawCentredString(offset_x_table + width_table * 0.215, offset_y_table + height_table * 0.32, "Usługa")
     c.line(offset_x_table + width_table * 0.42, offset_y_table, offset_x_table + width_table * 0.42, offset_y_table + height_table)
-    c.setFont("Times-Roman", 7)
-    c.drawRightString(offset_x_table + width_table * 0.417, offset_y_table + height_table * 0.73, root.find(".//transaction/description").text)
+    c.setFont("Times-Roman", 10)
+    c.drawRightString(offset_x_table + width_table * 0.417, offset_y_table + height_table * 0.8, root.find(".//transaction/description").text)
 
     c.setFont("Times-Roman", 9)
     c.drawCentredString(offset_x_table + width_table * 0.45, offset_y_table + height_table * 0.32, "Ilość")
     c.line(offset_x_table + width_table * 0.48, offset_y_table, offset_x_table + width_table * 0.48,
            offset_y_table + height_table)
-    c.setFont("Times-Roman", 7)
-    c.drawRightString(offset_x_table + width_table * 0.477, offset_y_table + height_table * 0.73,
+    c.setFont("Times-Roman", 10)
+    c.drawRightString(offset_x_table + width_table * 0.477, offset_y_table + height_table * 0.8,
                       root.find(".//transaction/quantity").text)
 
     c.setFont("Times-Roman", 9)
     c.drawCentredString(offset_x_table + width_table * 0.52, offset_y_table + height_table * 0.32, "Jm")
     c.line(offset_x_table + width_table * 0.56, offset_y_table, offset_x_table + width_table * 0.56,
            offset_y_table + height_table)
-    c.setFont("Times-Roman", 7)
-    c.drawRightString(offset_x_table + width_table * 0.557, offset_y_table + height_table * 0.73,
-                      root.find(".//transaction/quantity").text)
+    c.setFont("Times-Roman", 10)
+    c.drawRightString(offset_x_table + width_table * 0.557, offset_y_table + height_table * 0.8,
+                      root.find(".//transaction/unit_of_measure").text)
 
     c.setFont("Times-Roman", 9)
     c.drawCentredString(offset_x_table + width_table * 0.62, offset_y_table + height_table * 0.32, "Cena Netto")
     c.line(offset_x_table + width_table * 0.68, offset_y_table, offset_x_table + width_table * 0.68,
            offset_y_table + height_table)
-    c.setFont("Times-Roman", 7)
-    c.drawRightString(offset_x_table + width_table * 0.677, offset_y_table + height_table * 0.73,
-                      root.find(".//transaction/unit_price").text)
+    c.setFont("Times-Roman", 10)
+    c.drawRightString(offset_x_table + width_table * 0.677, offset_y_table + height_table * 0.8,
+                      "{:.2f}".format(float(root.find(".//transaction/unit_price").text)).replace(".", ","))
 
     c.setFont("Times-Roman", 9)
     c.drawCentredString(offset_x_table + width_table * 0.72, offset_y_table + height_table * 0.32, "VAT")
     c.line(offset_x_table + width_table * 0.76, offset_y_table, offset_x_table + width_table * 0.76,
            offset_y_table + height_table)
-    c.setFont("Times-Roman", 7)
-    c.drawRightString(offset_x_table + width_table * 0.757, offset_y_table + height_table * 0.73,
+    c.setFont("Times-Roman", 10)
+    c.drawRightString(offset_x_table + width_table * 0.757, offset_y_table + height_table * 0.8,
                       root.find(".//transaction/tax_rate").text)
 
     c.setFont("Times-Roman", 9)
     c.drawCentredString(offset_x_table + width_table * 0.82, offset_y_table + height_table * 0.32, "Kwota Netto")
     c.line(offset_x_table + width_table * 0.88, offset_y_table, offset_x_table + width_table * 0.88,
            offset_y_table + height_table)
-    c.setFont("Times-Roman", 7)
-    c.drawRightString(offset_x_table + width_table * 0.877, offset_y_table + height_table * 0.73,
-                      root.find(".//transaction/net_value").text)
+    c.setFont("Times-Roman", 10)
+    c.drawRightString(offset_x_table + width_table * 0.877, offset_y_table + height_table * 0.8,
+                      "{:.2f}".format(float(root.find(".//transaction/net_value").text)).replace(".", ","))
 
 
     c.setFont("Times-Roman", 9)
     c.drawCentredString(offset_x_table + width_table * 0.94, offset_y_table + height_table * 0.32, "Kwota Brutto")
     c.line(offset_x_table + width_table * 1, offset_y_table, offset_x_table + width_table * 1,
            offset_y_table + height_table)
-    c.setFont("Times-Roman", 7)
-    c.drawRightString(offset_x_table + width_table * 0.997, offset_y_table + height_table * 0.73,
-                      root.find(".//transaction/gross_value").text)
+    c.setFont("Times-Roman", 10)
+    c.drawRightString(offset_x_table + width_table * 0.997, offset_y_table + height_table * 0.8,
+                      "{:.2f}".format(float(root.find(".//transaction/gross_value").text)).replace(".", ","))
 
 
     # Zapłata
@@ -378,3 +393,5 @@ def generate_invoice_pdf(invoice_xml):
 
     c.showPage()
     c.save()
+
+    return os.path.join(dir, "invoice.pdf")

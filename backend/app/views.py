@@ -1,3 +1,5 @@
+import shutil
+import tempfile
 import threading
 from rest_framework import status, viewsets
 from rest_framework.decorators import api_view, action
@@ -120,11 +122,13 @@ class SubscriptionViewSet(viewsets.ViewSet):
         subscription = serializer.save()
         invoice_xml, invoice_filename = generate_invoice_xml(subscription)
         invoice_html = generate_invoice_html(invoice_xml, subscription.client)
-        generate_invoice_pdf(invoice_xml)
+        temp_dir = tempfile.mkdtemp()
+        invoice_pdf = generate_invoice_pdf(invoice_xml, temp_dir)
         print(invoice_xml)
-        print(invoice_html)
 
-        send_email_html("SandlerVOD - Szczegóły zakupu","", [request.user.email], invoice_html)
+        send_email_html("SandlerVOD - Szczegóły zakupu", invoice_html, [request.user.email], invoice_pdf)
+        shutil.rmtree(temp_dir)
+
         camunda_task = camunda_find_user_task(request.user.email)
         if camunda_task["name"] == "Potwierdź kupno pakietu":
             camunda_var = [
