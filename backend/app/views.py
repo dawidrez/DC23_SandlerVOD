@@ -10,6 +10,7 @@ from .models import Package, Movie, Subscription, Client
 from .serializers import SubscriptionSerializer, PackageSerializer, MovieSerializer, ClientSerializer, UpdateSubscriptionSerializer
 from .utils.invoice_utils import generate_invoice_xml, generate_invoice_html, generate_invoice_pdf
 from .utils.google.drive_utils import check_folder_exists, upload_file
+from .utils.camunda_utils import camunda_start_process, camunda_complete_task, camunda_complete_task_with_variables, camunda_find_user_task
 
 
 @api_view(('GET',))
@@ -103,6 +104,12 @@ class SubscriptionViewSet(viewsets.ViewSet):
             serializer = self.serializer_class(Subscription.objects.all(), many=True)
         else:
             serializer = self.serializer_class(Subscription.objects.filter(client=self.request.user), many=True)
+            camunda_task = camunda_find_user_task(request.user.email)
+            if camunda_task is None:
+                camunda_start_process(request.user.email)
+            else:
+                camunda_complete_task(camunda_task["id"])
+
         return Response(serializer.data, status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
@@ -115,6 +122,16 @@ class SubscriptionViewSet(viewsets.ViewSet):
         generate_invoice_pdf(invoice_xml)
         print(invoice_xml)
         print(invoice_html)
+
+        camunda_task = camunda_find_user_task(request.user.email)
+        if camunda_task["name"] == "Potwierdź kupno pakietu":
+            camunda_var = [
+                {
+                    "name": "purchase_confirmed",
+                    "value": True
+                }
+            ]
+            camunda_complete_task_with_variables(camunda_task["id"], camunda_var)
         
         client_folder_id = check_folder_exists(subscription.client.email)
 
