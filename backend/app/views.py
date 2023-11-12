@@ -11,6 +11,7 @@ from .serializers import SubscriptionSerializer, PackageSerializer, MovieSeriali
 from .utils.invoice_utils import generate_invoice_xml, generate_invoice_html, generate_invoice_pdf
 from .utils.google.drive_utils import check_folder_exists, upload_file
 from .utils.camunda_utils import camunda_start_process, camunda_complete_task, camunda_complete_task_with_variables, camunda_find_user_task
+from .utils.email_utils import send_email
 
 
 @api_view(('GET',))
@@ -123,6 +124,7 @@ class SubscriptionViewSet(viewsets.ViewSet):
         print(invoice_xml)
         print(invoice_html)
 
+        send_email("SandlerVOD - Szczegóły zakupu","", [request.user.email], invoice_html)
         camunda_task = camunda_find_user_task(request.user.email)
         if camunda_task["name"] == "Potwierdź kupno pakietu":
             camunda_var = [
@@ -132,7 +134,7 @@ class SubscriptionViewSet(viewsets.ViewSet):
                 }
             ]
             camunda_complete_task_with_variables(camunda_task["id"], camunda_var)
-        
+
         client_folder_id = check_folder_exists(subscription.client.email)
 
         upload_thread = threading.Thread(target=upload_file, args=(invoice_filename, client_folder_id), kwargs={"clean_up": True})
