@@ -12,7 +12,7 @@ def send_email(subject, message, recipient_list):
         fail_silently=False,
     )
 
-def send_email(subject, message, recipient_list, html_message):
+def send_email_html(subject, message, recipient_list, html_message):
    send_mail(
         subject,
         message,
