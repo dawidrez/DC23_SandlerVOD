@@ -184,6 +184,8 @@ def generate_docx(data, start_date, end_date):
     if os.path.exists('pie_chart5.png'):
         os.remove('pie_chart5.png')
 
+    return 'report.docx'
+
 
 def generate_odt(data, start_date, end_date):
     from odf.opendocument import OpenDocumentText
@@ -381,5 +383,7 @@ def generate_odt(data, start_date, end_date):
         os.remove('pie_chart1.png')
     if os.path.exists('pie_chart5.png'):
         os.remove('pie_chart5.png')
+
+    return 'report.odt'
 
 
