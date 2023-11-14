@@ -57,3 +57,7 @@ class UpdateSubscriptionSerializer(serializers.ModelSerializer):
         )
 
 
+class GenerateReportSerializer(serializers.Serializer):
+    start_date = serializers.DateField()
+    end_date = serializers.DateField()
+    format = serializers.ChoiceField(choices=["odt", "docx",])

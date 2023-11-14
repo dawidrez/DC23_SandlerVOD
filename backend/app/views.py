@@ -1,6 +1,8 @@
 import shutil
 import tempfile
 import threading
+
+from django.http import FileResponse
 from rest_framework import status, viewsets
 from rest_framework.decorators import api_view, action
 from rest_framework.generics import get_object_or_404
@@ -8,8 +10,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .authentication import ClientEmailAuthentication
+from .generate_report import generate_document
 from .models import Package, Movie, Subscription, Client
-from .serializers import SubscriptionSerializer, PackageSerializer, MovieSerializer, ClientSerializer, UpdateSubscriptionSerializer
+from .serializers import SubscriptionSerializer, PackageSerializer, MovieSerializer, ClientSerializer, \
+    UpdateSubscriptionSerializer, GenerateReportSerializer
 from .utils.invoice_utils import generate_invoice_xml, generate_invoice_html, generate_invoice_pdf
 from .utils.google.drive_utils import check_folder_exists, upload_file
 from .utils.camunda_utils import camunda_start_process, camunda_complete_task, camunda_complete_task_with_variables, camunda_find_user_task
@@ -167,4 +171,16 @@ class SubscriptionViewSet(viewsets.ViewSet):
         return Response(serializer.data, status.HTTP_200_OK)
 
 
+@api_view(('POST',))
+def report(request):
+    serializer = GenerateReportSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
 
+    document = generate_document(**serializer.validated_data)
+
+    response = FileResponse(open(document, 'rb'))
+    # Set the content type for the response
+    response['Content-Type'] = 'application/octet-stream'
+    # Set the Content-Disposition header to force a download
+    response['Content-Disposition'] = f'attachment; filename="report.{serializer.validated_data["format"]}"'
+    return response
