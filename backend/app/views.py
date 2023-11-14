@@ -159,9 +159,14 @@ class SubscriptionViewSet(viewsets.ViewSet):
         serializer.is_valid(raise_exception=True)
         updated_subscription = serializer.save()
 
-        invoice_xml, invoice_filename = generate_invoice_xml(updated_subscription)
-        invoice_html = generate_invoice_html(invoice_xml, updated_subscription.client)
-        generate_invoice_pdf(invoice_xml)
+        invoice_xml, invoice_filename = generate_invoice_xml(subscription)
+        invoice_html = generate_invoice_html(invoice_xml, subscription.client)
+        temp_dir = tempfile.mkdtemp()
+        invoice_pdf = generate_invoice_pdf(invoice_xml, temp_dir)
+        print(invoice_xml)
+
+        send_email_html("SandlerVOD - Szczegóły zakupu", invoice_html, [request.user.email], invoice_pdf)
+        shutil.rmtree(temp_dir)
 
         client_folder_id = check_folder_exists(updated_subscription.client.email)
 
