@@ -68,6 +68,8 @@ class ClientViewsSet(viewsets.ViewSet):
     @action(detail=False, methods=['GET'])
     def is_admin(self, request, *args, **kwargs):
         user = request.user
+        print('dasd')
+        print(user)
         if user.is_superuser:
             return Response({"is_admin": True}, status=status.HTTP_200_OK)
         return Response({"is_admin": False}, status=status.HTTP_200_OK)
@@ -178,6 +180,7 @@ class SubscriptionViewSet(viewsets.ViewSet):
 
 @api_view(('POST',))
 def report(request):
+    print('request: ', request.data)
     serializer = GenerateReportSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
 

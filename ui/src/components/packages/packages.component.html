@@ -1,11 +1,17 @@
 <app-header [headerZIndex]="21"></app-header>
 
-<section class="section hero" id="home" [style.padding-top.px]="screenDetectorObject.isMobile ? 20 : 0">
+<section class="section hero" [class.no-top-padding]="userId" id="home"
+  [style.padding-top.px]="screenDetectorObject.isMobile ? 20 : 0">
   <div class="featured-cars">
 
     <div class="hero-content">
       <div class="gap-4" *ngIf="userId">
-        <h2 class="h1 hero-title">{{ getTitle() }}</h2>
+        <div class="flex align-items-center">
+          <p-button icon="bi bi-arrow-left"
+            styleClass="p-button-rounded p-button-text custom-btn-size custom-back-button" (onClick)="routerBack()">
+          </p-button>
+          <h2 class="h1 hero-title">{{ getTitle() }}</h2>
+        </div>
         <form [formGroup]="userEditForm" class="row user-data-bar">
           <div class="col-md-8">
             <div class="row flex">
@@ -48,7 +54,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-4 flex justify-content-center align-items-center">
+          <div class="col-md-4 flex justify-content-start align-items-center save-button-container">
             <!-- <div class="col-3 flex justify-content-left align-items-center"> -->
             <p-button [label]="'commons.save' | translate" [loading]="loading" (onClick)="updateUserData()">
             </p-button>
@@ -68,6 +74,9 @@
 
 
 <!-- <p-card> -->
+<div *ngIf="userId" class="subscription-title pl-4">
+  <h2 class="h2" style="color: var(--pastel-orange)">{{ 'Client ' + ('commons.subscriptions' | translate) }}</h2>
+</div>
 <div #packagesContainer>
   <p-dataView [value]="filteredPackages" [layout]="layout" [paginator]="true" (onPage)="onPageEvent($event)" [rows]="32"
     [first]="32 * (filterForm.controls['page'].value || 0)" styleClass="featured-cars">

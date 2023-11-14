@@ -1,7 +1,7 @@
 <header class="header" [style.z-index]="headerZIndex">
   <div class="flex justify-content-between align-items-center w-full gap-1">
-    <div class="flex align-items-center justify-content-start gap-0"
-      [class.small-font-size]="screenDetectorObject.isMobile" [class.gap-1]="!screenDetectorObject.isMobile">
+    <div class="flex flex-wrap align-items-center justify-content-start gap-2"
+      [class.small-font-size]="screenDetectorObject.isMobile">
       <div class="flex align-items-center justify-content-start">
         <img class="logo_img" src="../../assets/img/lable.jpg" style="width: 40px"
           *ngIf="!screenDetectorObject.isMobile">
@@ -26,44 +26,13 @@
       <!-- <p-button (onClick)="openByView([views.INSTOCK])" [label]="'commons.in-stock' | translate"
         styleClass="p-button-text"></p-button> -->
     </div>
-
-    <!-- <div class="flex gap-2 justify-content-end">
-      <div *ngIf="isUserHasAdminRole()"> -->
-    <!-- <p-avatar icon="pi pi-user" styleClass="mr-2" shape="circle" [style]="{cursor: 'pointer'}"
-        (click)="userOP.toggle($event)">
-      </p-avatar> -->
-    <!-- <div style="cursor: pointer">
-          <p-chip *ngIf="!screenDetectorObject.isMobile" [label]="getCurrentUserFullName()" icon="pi pi-user"
-            (click)="userOP.toggle($event)"></p-chip>
-          <p-avatar *ngIf="screenDetectorObject.isMobile" [label]="getCurrentUserInitials()" shape="circle"
-            (click)="userOP.toggle($event)"></p-avatar>
-        </div> -->
-    <!-- <p-overlayPanel #userOP [appendTo]="document.body" styleClass="user-custom-overlay">
-          <ng-template pTemplate="content">
-            <p-listbox [options]="userOptions" optionLabel="name" [listStyle]="{ 'max-height': '250px' }">
-              <ng-template let-option pTemplate="item">
-                <div class="flex align-items-center gap-2" (click)="userClickEvent(option)">
-                  <i class="{{option.loading ? 'pi pi-spin pi-spinner' : option.icon}}" style="width: 18px"></i>
-                  <div>{{ option.name | translate }}</div>
-                </div>
-              </ng-template>
-            </p-listbox>
-
-          </ng-template>
-        </p-overlayPanel>
-      </div>
-      <div class="flex justify-content-center" *ngIf="!screenDetectorObject.isMobile">
-        <p-selectButton [options]="languageOptions" [formControl]="languageControl" optionLabel="icon"
-          styleClass="custom-language-buttons" optionValue="value">
-          <ng-template let-item pTemplate>
-            <i [class]="item.icon"></i>
-          </ng-template>
-        </p-selectButton>
-      </div> -->
-    <!-- </div> -->
-    <div class="flex justify-content-center" *ngIf="!screenDetectorObject.isMobile">
+    <div class="flex justify-content-center">
+      <p-button *ngIf="isUserLoggedIn() && isAdmin()" [label]="'commons.generate-report' | translate"
+        icon="bi bi-file-text" styleClass="p-button-raised p-button-text mr-2"
+        (click)="generateReportOverlay.toggle($event)">
+      </p-button>
       <p-selectButton [options]="languageOptions" [formControl]="languageControl" optionLabel="icon"
-        styleClass="custom-language-buttons" optionValue="value">
+        *ngIf="!screenDetectorObject.isMobile" styleClass="custom-language-buttons" optionValue="value">
         <ng-template let-item pTemplate>
           <i [class]="item.icon"></i>
         </ng-template>
@@ -73,3 +42,31 @@
   </div>
 </header>
 <div style="height: 64px"></div>
+
+<p-overlayPanel #generateReportOverlay>
+  <ng-template pTemplate="content">
+    <form [formGroup]="generateReportForm" class="flex flex-wrap gap-2 align-items-center justify-content-center">
+      <div>
+        <p-selectButton [options]="formatOptions" formControlName="format" optionLabel="label" optionValue="value"
+          styleClass="select-raport-format">
+          <ng-template let-item>
+            <i [class]="item.icon"></i>
+            <span class="p-button-label"></span>
+          </ng-template>
+        </p-selectButton>
+      </div>
+      <div>
+        <app-date-range-select label="commons.report-date-range"
+          [dateFromControl]="$any(generateReportForm).controls['start_date']"
+          [dateToControl]="$any(generateReportForm).controls['end_date']" [inputId]="'report-date-select'"
+          [useBackendDateFormat]="true" [convertBackendDatesFormatOnInit]="true">
+        </app-date-range-select>
+      </div>
+      <p-button [loading]="generatingReport" [label]="'commons.generate' | translate" (onClick)="generateReport()"
+        [disabled]="generateReportForm.invalid">
+      </p-button>
+    </form>
+  </ng-template>
+</p-overlayPanel>
+
+<p-toast [position]="'top-left'"></p-toast>

@@ -327,3 +327,30 @@ lightbox {
 .control-invalid {
   color: var(--pastel-red);
 }
+
+.p-selectbutton .p-button.p-highlight {
+  background: var(--surface-700);
+  color: black;
+
+  .p-button-icon {
+    color: var(--pastel-blue);
+  }
+
+  &:hover {
+    background: var(--surface-800);
+    color: black;
+
+    .p-button-icon {
+      color: var(--pastel-blue);
+    }
+  }
+
+  &:focus {
+    background: var(--surface-800);
+    color: black;
+
+    .p-button-icon {
+      color: var(--pastel-blue);
+    }
+  }
+}

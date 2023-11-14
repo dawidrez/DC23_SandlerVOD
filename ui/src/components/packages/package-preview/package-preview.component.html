@@ -10,20 +10,20 @@
           <div>
             <div class="p-card-title">{{ packageObject.name }}</div>
             <div class="p-card-subtitle">
-              {{subscriptionId ? (subscriptionItem?.userObject?.fullName + ' - ' +(packageObject.price + ' zł')) : packageObject.price + ' zł' }}
+              {{subscriptionId ? (('commons.user' | translate) + ': ' + subscriptionItem?.userObject?.fullName + ', ' + ('commons.price' | translate) + ': ' +(packageObject.price + ' zł')) : packageObject.price + ' zł' }}
             </div>
           </div>
         </div>
         <div class="flex justify-content-end align-items-center">
           <!-- Simple use -->
-          <app-date-range-select *ngIf="!subscriptionId && !isPackageAlreadyUserPackage()"
+          <app-date-range-select *ngIf="!subscriptionId && !isPackageAlreadyUserPackage() && userSubscriptions?.length"
             label="commons.subscription-date" [dateFromControl]="$any(subscriptionForm).controls['start_date']"
             [dateToControl]="$any(subscriptionForm).controls['end_date']" [inputId]="'created-date-select'"
             [useBackendDateFormat]="true" [convertBackendDatesFormatOnInit]="true" [min]="today">
           </app-date-range-select>
-          <p-button *ngIf="!subscriptionId && !isPackageAlreadyUserPackage()" icon="bi bi-plus-circle"
-            styleClass="p-button-rounded p-button-text custom-btn-size" (onClick)="addPackage()"
-            [disabled]="subscriptionForm.invalid"></p-button>
+          <p-button *ngIf="!subscriptionId && !isPackageAlreadyUserPackage() && userSubscriptions?.length"
+            icon="bi bi-plus-circle" [loading]="subscribing" styleClass="p-button-rounded p-button-text custom-btn-size"
+            (onClick)="addPackage()" [disabled]="subscriptionForm.invalid"></p-button>
 
           <!-- Update use -->
           <span class="mr-2"
@@ -52,11 +52,11 @@
 
               <div class="card-title-wrapper">
                 <h3 class="h3 card-title">
-                  <a [routerLink]="['/movies', movie.id]">{{movie.title}}</a>
+                  <span>{{movie.title}}</span>
                 </h3>
                 <data class="year" value="0">{{"☆ " + movie.rating}}</data>
               </div>
-              <a [routerLink]="['/movies', movie.id]">
+              <span>
                 <ul class="card-list">
                   <li class="card-list-item">
                     <i class="bi bi-film"></i>
@@ -67,96 +67,18 @@
                     <span class="card-item-text">{{movie.description || '---'}}</span>
                   </li>
                 </ul>
-              </a>
+              </span>
               <div class="card-price-wrapper">
-
                 <p-button icon="bi bi-link-45deg" [pTooltip]="'commons.copy-link' | translate" tooltipPosition="bottom"
                   (onClick)="copyMovieLink(movie.id)" styleClass="p-button-rounded p-button-text p-button-sm">
                 </p-button>
-                <!-- 
-                          <p-button *ngIf="isUserHasAdminRole()" icon="pi pi-trash"
-                              [pTooltip]="'commons.delete' | translate" tooltipPosition="bottom"
-                              (onClick)="removeCar($event, car.id)" [loading]="car.loadingDelete"
-                              styleClass="p-button-rounded p-button-text p-button-sm p-button-danger">
-                          </p-button> -->
-
               </div>
 
             </div>
           </div>
         </ng-template>
       </p-dataView>
-      <!-- </p-card> -->
     </div>
-
-    <!-- <div class="row" *ngIf="isPlatformBrowserOpened()">
-      <div class="col-12">
-        <div class="flex justify-content-center w-full">
-          <div class="lot_parameters w-full">
-
-            <div class="lot_parameter w-full">
-              <div class="lot_preview">
-                <i class="bi bi-calendar3"></i>
-              </div>
-              <div class="lot_box">
-                <div class="lot_category">
-                  {{ "car.registration-year" | translate }}
-                </div>
-                <div class="lot_value">{{ packageObject.registrationYear }}</div>
-              </div>
-            </div>
-
-            <div class="lot_parameter w-full">
-              <div class="lot_preview">
-                <i class="bi bi-speedometer"></i>
-              </div>
-              <div class="lot_box">
-                <div class="lot_category">{{ "car.mileage" | translate }}</div>
-                <div class="lot_value">
-                  {{
-                    car.mileage
-                      ? (car.mileage | number) +
-                        " " +
-                        ("commons.km-short" | translate)
-                      : "---"
-                  }}
-                </div>
-              </div>
-            </div>
-            <div class="lot_parameter w-full">
-              <div class="lot_preview">
-                <i class="bi bi-ev-front bi-lg"></i>
-              </div>
-              <div class="lot_box">
-                <div class="lot_category">
-                  {{ "car.engine-displacement" | translate }}
-                </div>
-                <div class="lot_value">
-                  {{
-                    car.engineDisplacement
-                      ? (car.engineDisplacement | number) +
-                        " " +
-                        ("commons.cubic-centimetres" | translate)
-                      : "---"
-                  }}
-                </div>
-              </div>
-            </div>
-            <div class="lot_parameter w-full">
-              <div class="lot_preview">
-                <i class="bi bi-fuel-pump"></i>
-              </div>
-              <div class="lot_box">
-                <div class="lot_category">
-                  {{ "car.fuel-type" | translate }}
-                </div>
-                <div class="lot_value">{{ getFuelTypeByLanguage() }}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> -->
 
 
   </p-card>

@@ -8,12 +8,16 @@ import { DOCUMENT } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { ScreenDetectorService, ScreenDetector } from "src/services/screenDetector.service";
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { RaportService } from 'src/services/raport.service';
+import { MessageService } from 'primeng/api';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
+  providers: [MessageService]
 })
 export class HeaderComponent {
 
@@ -31,6 +35,16 @@ export class HeaderComponent {
   localStorageTranslateKey: string = 'LANGUAGE'
   screenDetectorObject: ScreenDetector;
 
+  generateReportForm: FormGroup = new FormGroup({
+    start_date: new FormControl(null, Validators.required),
+    end_date: new FormControl(null, Validators.required),
+    format: new FormControl('docx', Validators.required),
+  });
+
+  generatingReport: boolean = false;
+  formatOptions: any[] = [{ label: 'Microsoft Word(DOCX)', value: 'docx', icon: 'bi bi-file-earmark-word-fill' },
+  { label: 'OpenDocument(ODT)', value: 'odt', icon: 'bi bi-file-earmark-text-fill' }];
+
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     @Inject(DOCUMENT) public document: Document,
@@ -39,7 +53,9 @@ export class HeaderComponent {
     private userService: UserService,
     private translate: TranslateService,
     // private carService: CarService,
-    public screenDetectorService: ScreenDetectorService,) {
+    public screenDetectorService: ScreenDetectorService,
+    private raportService: RaportService,
+    private messageService: MessageService) {
     this.screenDetectorObject = this.screenDetectorService.getScreenDetectorObject();
   }
 
@@ -110,6 +126,49 @@ export class HeaderComponent {
     const lastNameInitial = user.lastname ? user.lastname[0] : '';
 
     return `${firstNameInitial} ${lastNameInitial}`;
+  }
+
+  generateReport() {
+    if (this.generateReportForm.valid) {
+      this.generatingReport = true;
+      this.generateReportForm.controls['start_date'].disable();
+      this.generateReportForm.controls['end_date'].disable();
+      this.generateReportForm.controls['format'].disable();
+      this.raportService.generate(this.generateReportForm.getRawValue()).subscribe(
+        (response: any) => {
+          const dataType = response.type;
+          const binaryData = [];
+          binaryData.push(response);
+          const downloadLink = document.createElement("a");
+          downloadLink.href = window.URL.createObjectURL(new Blob(binaryData, { type: dataType }));
+
+          downloadLink.setAttribute("download", "report_" + this.generateReportForm.controls['start_date'].getRawValue() + '_'
+            + this.generateReportForm.controls['end_date'].getRawValue() + "." + this.generateReportForm.controls['format'].getRawValue());
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+          this.generatingReport = false;
+          this.generateReportForm.controls['start_date'].enable();
+          this.generateReportForm.controls['end_date'].enable();
+          this.generateReportForm.controls['format'].enable();
+        },
+        (error: any) => {
+          console.log(error);
+          this.showGenerateRaportWarn();
+          this.generatingReport = false;
+          this.generateReportForm.controls['start_date'].enable();
+          this.generateReportForm.controls['end_date'].enable();
+          this.generateReportForm.controls['format'].enable();
+        }
+      )
+    }
+  }
+
+  showGenerateRaportWarn() {
+    this.messageService.add({ severity: 'warn', summary: 'Warn', detail: this.translate.instant('commons.date-range-error'), });
+  }
+
+  getDateFormat(date: any) {
+    return moment(date).format("DD/MM/YYYY HH:mm:ss");
   }
 
 }
