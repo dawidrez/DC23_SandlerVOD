@@ -16,6 +16,8 @@ def generate_docx(data, start_date, end_date):
     from docx.enum.text import WD_ALIGN_PARAGRAPH
     from docx.oxml.ns import qn
     from docx.oxml import OxmlElement
+    import matplotlib
+    matplotlib.use("agg")
     import matplotlib.pyplot as plt
     import os
     from datetime import datetime
@@ -193,6 +195,8 @@ def generate_odt(data, start_date, end_date):
     from odf.text import H, P, Span
     from odf.table import Table, TableRow, TableCell, TableColumn
     from odf.draw import Frame, Image
+    import matplotlib
+    matplotlib.use("agg")
     import matplotlib.pyplot as plt
     from datetime import datetime
     import os
