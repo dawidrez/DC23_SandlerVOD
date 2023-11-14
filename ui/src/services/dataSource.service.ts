@@ -84,7 +84,9 @@ export class DataSourceService {
 
     // Get File
     getFile(restMapping: string, data = {}): Observable<object> {
-        return this.http.get(`${this.hostUrl}${restMapping}`, { responseType: "blob" as "json", params: data });
+        return this.http.post(`${this.hostUrl}${restMapping}`, data, {
+            responseType: "blob" as "json"
+        });
     }
 
     // Create File

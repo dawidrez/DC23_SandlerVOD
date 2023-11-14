@@ -56,15 +56,10 @@
     "movies": "Filmy",
     "start-date": "Data Rozpoczęcia",
     "end-date": "Data Zakończenia",
-    "active": "Aktywny"
-  },
-
-  "car": {
-    "auction-end-date": "Data zakończenia aukcji",
-    "registration-year": "Rok rejestracji",
-    "mileage": "Przebieg",
-    "engine-displacement": "Pojemność silnika",
-    "fuel-type": "Rodzaj paliwa",
-    "original-url": "Oryginalny URL"
+    "active": "Aktywny",
+    "generate-report": "Wygeneruj raport",
+    "report-date-range": "Zakres dat raportu",
+    "generate": "Wygeneruj",
+    "date-range-error": "Nie można wygenerować raportu dla wybranego zakresu dat."
   }
 }

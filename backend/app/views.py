@@ -180,6 +180,7 @@ class SubscriptionViewSet(viewsets.ViewSet):
 
 @api_view(('POST',))
 def report(request):
+    print('request: ', request.data)
     serializer = GenerateReportSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
 

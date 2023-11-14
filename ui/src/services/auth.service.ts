@@ -21,6 +21,7 @@ export class AuthService {
     login(params: any): Observable<any> {
         this.saveUser(params.email);
         console.log('login true');
+        this.getIfUserIsAdmin(true).subscribe();
         return of(this.getAuthenticatedUserData());
     }
 
@@ -30,7 +31,7 @@ export class AuthService {
         return this.dataSourceService.post(`${this.baseUrl}/`, params).pipe(
             tap((response: any) => {
                 if (response) {
-                    this.getIfUserIsAdmin().subscribe();
+                    this.getIfUserIsAdmin(true).subscribe();
                 }
             }));
     }
@@ -76,8 +77,8 @@ export class AuthService {
         return false;
     }
 
-    getIfUserIsAdmin() {
-        if (!this.isAdminRequest) {
+    getIfUserIsAdmin(forceRestRequest: boolean = false) {
+        if (!this.isAdminRequest || forceRestRequest) {
             this.isAdminRequest = this.dataSourceService.getWithUserEmailInHeaderParam(`${this.baseUrl}/is_admin`).pipe(
                 tap((response: any) => {
                     this.isAdminUser = !!response?.is_admin;

@@ -24,6 +24,7 @@ import { ListboxModule } from 'primeng/listbox';
 import { PasswordModule } from 'primeng/password';
 import { ChipModule } from 'primeng/chip';
 import { CalendarModule } from 'primeng/calendar';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
     imports: [],
@@ -52,6 +53,7 @@ import { CalendarModule } from 'primeng/calendar';
         PasswordModule,
         ChipModule,
         CalendarModule,
+        ToastModule,
     ],
     providers: [ConfirmationService]
 })

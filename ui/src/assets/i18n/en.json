@@ -56,15 +56,10 @@
     "movies": "Movies",
     "start-date": "Start Date",
     "end-date": "End Date",
-    "active": "Active"
-  },
-
-  "car": {
-    "auction-end-date": "Auction end date",
-    "registration-year": "Registration year",
-    "mileage": "Milage",
-    "engine-displacement": "Engine capasity",
-    "fuel-type": "Fuel type",
-    "original-url": "Original Url"
+    "active": "Active",
+    "generate-report": "Generate Report",
+    "report-date-range": "Report Date Range",
+    "generate": "Generate",
+    "date-range-error": "Unable to generate the report for the specified date range."
   }
 }

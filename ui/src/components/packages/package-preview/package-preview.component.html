@@ -16,14 +16,14 @@
         </div>
         <div class="flex justify-content-end align-items-center">
           <!-- Simple use -->
-          <app-date-range-select *ngIf="!subscriptionId && !isPackageAlreadyUserPackage()"
+          <app-date-range-select *ngIf="!subscriptionId && !isPackageAlreadyUserPackage() && userSubscriptions?.length"
             label="commons.subscription-date" [dateFromControl]="$any(subscriptionForm).controls['start_date']"
             [dateToControl]="$any(subscriptionForm).controls['end_date']" [inputId]="'created-date-select'"
             [useBackendDateFormat]="true" [convertBackendDatesFormatOnInit]="true" [min]="today">
           </app-date-range-select>
-          <p-button *ngIf="!subscriptionId && !isPackageAlreadyUserPackage()" icon="bi bi-plus-circle"
-            [loading]="subscribing" styleClass="p-button-rounded p-button-text custom-btn-size" (onClick)="addPackage()"
-            [disabled]="subscriptionForm.invalid"></p-button>
+          <p-button *ngIf="!subscriptionId && !isPackageAlreadyUserPackage() && userSubscriptions?.length"
+            icon="bi bi-plus-circle" [loading]="subscribing" styleClass="p-button-rounded p-button-text custom-btn-size"
+            (onClick)="addPackage()" [disabled]="subscriptionForm.invalid"></p-button>
 
           <!-- Update use -->
           <span class="mr-2"
