@@ -16,4 +16,5 @@ router.register(r'subscriptions', SubscriptionViewSet)
 urlpatterns = [
     path("", views.index, name="index"),
     path("api/", include(router.urls)),
+    path("api/generate_report/", views.report, name="generate_report"),
 ]
