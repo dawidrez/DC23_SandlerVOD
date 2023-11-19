@@ -68,8 +68,6 @@ class ClientViewsSet(viewsets.ViewSet):
     @action(detail=False, methods=['GET'])
     def is_admin(self, request, *args, **kwargs):
         user = request.user
-        print('dasd')
-        print(user)
         if user.is_superuser:
             return Response({"is_admin": True}, status=status.HTTP_200_OK)
         return Response({"is_admin": False}, status=status.HTTP_200_OK)
@@ -130,7 +128,6 @@ class SubscriptionViewSet(viewsets.ViewSet):
         invoice_html = generate_invoice_html(invoice_xml, subscription.client)
         temp_dir = tempfile.mkdtemp()
         invoice_pdf = generate_invoice_pdf(invoice_xml, temp_dir)
-        print(invoice_xml)
 
         send_email_html("SandlerVOD - Szczegóły zakupu", invoice_html, [request.user.email], invoice_pdf)
         shutil.rmtree(temp_dir)

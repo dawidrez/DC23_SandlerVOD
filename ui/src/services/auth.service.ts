@@ -31,6 +31,7 @@ export class AuthService {
         return this.dataSourceService.post(`${this.baseUrl}/`, params).pipe(
             tap((response: any) => {
                 if (response) {
+                    this.saveUser(params.email);
                     this.getIfUserIsAdmin(true).subscribe();
                 }
             }));
